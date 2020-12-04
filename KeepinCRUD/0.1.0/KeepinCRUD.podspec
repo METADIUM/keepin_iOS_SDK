@@ -39,7 +39,7 @@ TODO: Add long description of the pod here.
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  # s.source = { :git => 'https://github.com/METADIUM/Web3Swift-iOS', :tag => '1.0.9' }
+#  s.source = { :git => 'https://github.com/METADIUM/Web3Swift-iOS', :tag => '1.0.9' }
   s.dependency 'web3iOS', '~> 1.0.9'
   
 end
