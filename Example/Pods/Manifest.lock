@@ -1,0 +1,63 @@
+PODS:
+  - BigInt (3.1.0):
+    - SipHash (~> 1.2)
+  - CryptoSwift (0.15.0)
+  - EthereumAddress (1.0.0):
+    - CryptoSwift (~> 0.13)
+  - FBSnapshotTestCase (2.1.4):
+    - FBSnapshotTestCase/SwiftSupport (= 2.1.4)
+  - FBSnapshotTestCase/Core (2.1.4)
+  - FBSnapshotTestCase/SwiftSupport (2.1.4):
+    - FBSnapshotTestCase/Core
+  - KeepinCRUD (0.1.0):
+    - web3iOS (~> 1.1.0)
+  - scrypt (2.0):
+    - CryptoSwift (~> 0.11)
+  - secp256k1_swift (1.0.3)
+  - SipHash (1.2.2)
+  - SwiftRLP (1.2):
+    - BigInt (~> 3.1)
+  - web3iOS (1.1.0):
+    - BigInt (~> 3.1)
+    - EthereumAddress (~> 1.0.0)
+    - scrypt (~> 2.0)
+    - secp256k1_swift (~> 1.0.3)
+    - SwiftRLP (~> 1.1)
+
+DEPENDENCIES:
+  - FBSnapshotTestCase (~> 2.1.4)
+  - KeepinCRUD (from `../`)
+  - web3iOS (~> 1.1.0)
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - BigInt
+    - CryptoSwift
+    - EthereumAddress
+    - FBSnapshotTestCase
+    - scrypt
+    - secp256k1_swift
+    - SipHash
+    - SwiftRLP
+  https://github.com/METADIUM/Web3Swift-iOS:
+    - web3iOS
+
+EXTERNAL SOURCES:
+  KeepinCRUD:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  BigInt: 76b5dfdfa3e2e478d4ffdf161aeede5502e2742f
+  CryptoSwift: 769f58a9e89f64e8796c2e59ce5f002dc81a2438
+  EthereumAddress: f476e1320dca3a0024431e713ede7a09c7eb7796
+  FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
+  KeepinCRUD: c2d6a1fd80f19fa376fb59fe6e14d0d9075f3437
+  scrypt: 3fe5b1a3b0976f97cd87488673a8f7c65708cc84
+  secp256k1_swift: 4fc5c4b2d2c6d21ee8ccb868cdc92da12f38bed9
+  SipHash: fad90a4683e420c52ef28063063dbbce248ea6d4
+  SwiftRLP: 98a02b2210128353ca02e4c2f4d83e2a9796db4f
+  web3iOS: a31e19ac0bbe0558b7dd7e1e9f5e74790a33e9e0
+
+PODFILE CHECKSUM: c252b70edc0f5a07f7abb12235b6aecc87c21dfd
+
+COCOAPODS: 1.9.3
