@@ -28,12 +28,12 @@ pod 'KeepinCRUD'
 
 ### 지갑 키 생성
 
-    let delegator = MetaDelegator.init() 
+    self.delegator = MetaDelegator.init() 
 
     //delegate url, node url, didPrefix를 직접 설정할 때 초기화 부분에 셋팅
-    //let delegator = MetaDelegator.init(delegatorUrl: "https://delegator.metadium.com", nodeUrl: "https://api.metadium.com/prod", didPrefix: "did:meta:testnet:")
+    //self.delegator = MetaDelegator.init(delegatorUrl: "https://delegator.metadium.com", nodeUrl: "https://api.metadium.com/prod", didPrefix: "did:meta:testnet:")
 
-    let wallet = MetaWallet.init(delegator: delegator)
+    let wallet = MetaWallet.init(delegator: self.delegator)
 
     //key.privateKey, key.publicKey, key.address
     let key = wallet.createKey()
@@ -48,13 +48,17 @@ pod 'KeepinCRUD'
 
 ### DID 생성
 
-    let (type, txID) = delegator.createIdentityDelegated(signData: signData!, r: r, s: s, v: v)
+    let (type, txID) = self.delegator.createIdentityDelegated(signData: signData!, r: r, s: s, v: v)
     let receipt = try? wallet.transactionReceipt(type: type!, txId: txID!)
 
 
+### 서비스 키 생성
+    let serviceKey = wallet.createServiceKey()
+    
+    
 ### Delegate
 
-#### add_public_key_delegated : 지갑 publicKey를 resolver에 delegate를 통해 등록
+#### add_public_key_delegated : 지갑 publicKey를 publickey resolver에 delegate를 통해 등록
 
     let (type, txID) = self.delegator.addPublicKeyDelegated(signData: signData!, r: r, s: s, v: v)
     let receipt = try? self.wallet.transactionReceipt(type: type!, txId: txID)
@@ -71,11 +75,8 @@ pod 'KeepinCRUD'
     if receipt!.status == .success {
         
     }
-
-
-# 서비스 키 생성
-let serviceKey = wallet.createServiceKey()
-
+    
+    
 ## Author
 
 jinsikhan, jshan@coinplug.com
