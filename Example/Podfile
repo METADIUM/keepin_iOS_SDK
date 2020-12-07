@@ -1,7 +1,13 @@
 
 platform :ios, '11.3'
 source 'https://github.com/CocoaPods/Specs.git'
-source 'https://github.com/METADIUM/Web3Swift-iOS'
+#source 'https://github.com/METADIUM/Web3Swift-iOS'
+
+
+
+def import_pods
+  pod 'web3iOS', '~> 1.0.9', :git => 'https://github.com/METADIUM/Web3Swift-iOS.git'
+end
 
 
 target 'KeepinCRUD_Example' do
@@ -15,6 +21,7 @@ target 'KeepinCRUD_Example' do
     inherit! :search_paths
 
     pod 'FBSnapshotTestCase' , '~> 2.1.4'
-    pod 'web3iOS', '~> 1.1.0'
+#    pod 'web3iOS', '~> 1.0.9'
+    import_pods
   end
 end

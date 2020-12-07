@@ -44,7 +44,11 @@ public class MetaDelegator: NSObject {
     var messenger: MetaDelegatorMessenger!
     
     
-    
+    /**
+     * @param  delegate Url
+     * @param node Url
+     * @param didPrefix
+     */
     public init(delegatorUrl: String? = "https://testdelegator.metadium.com", nodeUrl: String? = "https://api.metadium.com/dev", didPrefix: String? = "did:meta:testnet:") {
         super.init()
         
@@ -60,6 +64,10 @@ public class MetaDelegator: NSObject {
     
     
     
+    /**
+     * get registry address
+     * @return registryAddress
+     */
     private func getAllServiceAddress() -> RegistryAddress {
         
         let group = DispatchGroup()
@@ -87,6 +95,9 @@ public class MetaDelegator: NSObject {
     
     
     
+    /**
+     * get time stamp
+     */
     
     public func getTimeStamp() -> Int {
         
@@ -126,7 +137,11 @@ public class MetaDelegator: NSObject {
     
     
     
-    //delegate
+    
+    
+    /**
+     * DID 생성
+     */
     public func createIdentityDelegated(signData: Data, r: String, s: String, v: String) -> (MetaTransactionType?, String?) {
         
         var txID: String = ""
@@ -168,7 +183,14 @@ public class MetaDelegator: NSObject {
     
     
     
-    
+    /**
+     * 퍼블릭키 추가
+     * @param signData
+     * @r
+     * @s
+     * @v
+     * @return transactionType, txID
+     */
     
     public func addPublicKeyDelegated(signData: Data, r: String, s: String, v: String) -> (MetaTransactionType?, String) {
         
@@ -207,9 +229,18 @@ public class MetaDelegator: NSObject {
         return (.addWalletPublicKey, txID)
     }
     
+    
 
     
-    
+    /**
+     * 서비스 키 추가
+     * @param address
+     * @param signData
+     * @r
+     * @s
+     * @v
+     * @return transactionType, txID
+     */
     
     public func addKeyDelegated(address: String, signData: Data, serviceId: String, r: String, s: String, v: String) -> (MetaTransactionType?, String) {
         

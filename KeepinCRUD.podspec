@@ -26,12 +26,12 @@ TODO: Add long description of the pod here.
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Benjamin Han' => 'jshan@coinplug.com' }
-  s.source           = { :git => 'https://github.com/METADIUM/keepin_iOS_SDK.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/METADIUM/keepin_iOS_SDK', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '11.3'
+  s.ios.deployment_target = '12.0'
 
-  s.source_files = 'KeepinCRUD/Classes/**/*'
+  s.source_files = 'KeepinCRUD', 'KeepinCRUD/Classes/**/*'
   
   # s.resource_bundles = {
   #   'KeepinCRUD' => ['KeepinCRUD/Assets/*.png']
@@ -39,5 +39,7 @@ TODO: Add long description of the pod here.
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'web3iOS', '~> 1.1.0'
+#  s.source = { :git => 'https://github.com/METADIUM/Web3Swift-iOS', :tag => '1.0.9' }
+  s.dependency 'web3iOS', '~> 1.0.9'
+  
 end

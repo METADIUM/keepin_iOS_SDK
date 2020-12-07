@@ -17,6 +17,8 @@ class ViewController: UIViewController {
     
     var store: BIP32Keystore!
     
+    var serviceKey: MetadiumKey!
+    
     
     @IBOutlet weak var didButton: UIButton!
     @IBOutlet weak var createButton: UIButton!
@@ -33,11 +35,15 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
+        //디폴트는 https://testdelegator.metadium.com, https://api.metadium.com/dev, did:meta:testnet:
         self.delegator = MetaDelegator.init()
-        self.wallet = MetaWallet.init(delegator: delegator)
         
+        
+        //delegate url, node url, didPrefix를 직접 설정할 때
+        //self.delegator = MetaDelegator.init(delegatorUrl: "https://delegator.metadium.com", nodeUrl: "https://api.metadium.com/prod", didPrefix: "did:meta:testnet:")
+        
+        self.wallet = MetaWallet.init(delegator: delegator)
         
         self.addPublicKeyButton.isEnabled = false
         self.addServiceKeyButton.isEnabled = false
@@ -50,9 +56,15 @@ class ViewController: UIViewController {
 
     
     
-    
+    //지갑 키 생성
     @IBAction func walletKey() {
-        self.wallet.createKey(type: .walletKey)
+        //로컬에 키가 없을 경우 생성
+        let key = self.wallet.createKey()
+        print("privateKey: \(key!.privateKey), publicKey: \(key!.publicKey), address: \(key!.address)")
+        
+        
+        //로컬에 프라이빗 키가 이미 저장이 되어 있을 때
+        //self.wallet.assignPrivateKey(privateKey: (key?.privateKey)!)
         
         self.addPublicKeyButton.isEnabled = true
         
@@ -61,14 +73,16 @@ class ViewController: UIViewController {
         }
     }
     
+    
+    //DID 생성
     @IBAction func createDidButtonAction() {
         let (signData, r, s, v) = wallet.getWalletSignature()
         
         DispatchQueue.global().sync {
             let (type, txID) = delegator.createIdentityDelegated(signData: signData!, r: r, s: s, v: v)
-            let receipt = self.wallet.transactionReceipt(type: type!, txId: txID!)
+            let receipt = try? self.wallet.transactionReceipt(type: type!, txId: txID!)
             
-            print("status: \(receipt.status), hash : \(receipt.transactionHash)")
+            print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
         }
         
         
@@ -82,43 +96,59 @@ class ViewController: UIViewController {
     }
     
     
+    //add PublicKey delegate
     @IBAction func addPublicKeyDelegateButtonAction() {
         let (signData, r, s, v) = self.wallet.getPublicKeySignature()
         print(String(data: signData!, encoding: .utf8))
         
         
         let (type, txID) = self.delegator.addPublicKeyDelegated(signData: signData!, r: r, s: s, v: v)
-        let receipt = self.wallet.transactionReceipt(type: type!, txId: txID)
+        let receipt = try? self.wallet.transactionReceipt(type: type!, txId: txID)
         
-        print("status: \(receipt.status), hash : \(receipt.transactionHash)")
+        print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
     }
     
     
+    
+    //서비스 키 생성
     @IBAction func serviceKeyButtonAction() {
-        self.store = self.wallet.createServiceKey()
-        self.addServiceKeyButton.isEnabled = true
         
+        var message = "서비스 키가 생성되었습니다."
         
-        if self.store != nil {
-            let alert = UIAlertController.init(title: "", message: "서비스키 생성 완료", preferredStyle: .alert)
+        if self.serviceKey == nil {
+            self.serviceKey = self.wallet.createServiceKey()
+            self.addServiceKeyButton.isEnabled = true
+        }
+        else {
+            message = "이미 서비스 키가 있습니다."
+        }
+        
+        let alert = UIAlertController.init(title: "", message: message, preferredStyle: .alert)
+        let action = UIAlertAction.init(title: "OK", style: .default, handler: nil)
+        alert.addAction(action)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    
+    
+    
+    //서비스 퍼블릭키 delegate
+    @IBAction func addServicePublicKeyDelegateButtonAction() {
+        
+        if self.serviceKey == nil {
+            
+            let alert = UIAlertController.init(title: "", message: "서비스 키를 먼저 생성하세요.", preferredStyle: .alert)
             let action = UIAlertAction.init(title: "OK", style: .default, handler: nil)
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
+            
+            return
         }
-    }
-    
-    
-    
-    @IBAction func addServicePublicKeyDelegateButtonAction() {
         
-        let address = self.store?.addresses?.first
         
-        let privateKey = try! self.store?.UNSAFE_getPrivateKeyData(password: "", account: address!)
-        print(privateKey)
+        let address = self.serviceKey.address
         
-        let serviceAddr = address?.address
-        
-        let (addr, signData, servieId, r, s, v) = self.wallet.getSignServiceId(serviceID: "5933e64b-cb34-11ea-9e0f-020c6496fbdc", serviceAddress: serviceAddr!)
+        let (addr, signData, servieId, r, s, v) = self.wallet.getSignServiceId(serviceID: "5933e64b-cb34-11ea-9e0f-020c6496fbdc", serviceAddress: address!)
         
         DispatchQueue.main.async {
             self.signatureLabel.text = String(data: signData!, encoding: .utf8)
@@ -127,20 +157,20 @@ class ViewController: UIViewController {
         
         DispatchQueue.global().sync {
             let (type, txID) = self.delegator.addKeyDelegated(address: addr, signData: signData!, serviceId: servieId, r: r, s: s, v: v)
-            let receipt = self.wallet.transactionReceipt(type: type!, txId: txID)
+            let receipt = try? self.wallet.transactionReceipt(type: type!, txId: txID)
             
-            print("status: \(receipt.status), hash : \(receipt.transactionHash)")
+            print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
             
             
             var title = ""
-            if receipt.status == .success {
+            if receipt!.status == .success {
                 title = "성공"
             }
             else {
                 title = "실패"
             }
             
-            let alert = UIAlertController.init(title: title, message: receipt.transactionHash, preferredStyle: .alert)
+            let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
             let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
             
             alert.addAction(action)
