@@ -11,6 +11,7 @@ import BigInt
 import CryptoSwift
 
 
+public typealias TransactionRecipt = (EthereumClientError?, EthereumTransactionReceipt?) -> Void
 
 public enum MetaTransactionType {
     case createDid
@@ -25,24 +26,16 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
     var delegator: MetaDelegator!
     
     var metaID: String!
-    
+
     var keyStore: EthereumKeystoreV3?
+    
+    var did: String! = ""
     
     
     func sendTxID(txID: String, type: MetaTransactionType) {
         
-        do {
-            let _ = try self.transactionReceipt(type: type, txId: txID)
-        } catch {
-            print(error.localizedDescription)
-        }
+        let _ = self.transactionReceipt(type: type, txId: txID, complection: nil)
     }
-    
-    
-    
-    /**
-     * 지갑 키 생성
-     */
     
     
     public init(delegator: MetaDelegator) {
@@ -50,9 +43,24 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
         
         self.delegator = delegator
         self.delegator.messenger = self
+        
+        /**
+         * 로컬에 저장되어 있는 privateKey로 keystore를 가져온다.
+         */
+        if !delegator.privateKey!.isEmpty {
+            self.keyStore = try! EthereumKeystoreV3.init(privateKey: Data.init(hex: delegator.privateKey!))
+            self.delegator.keyStore = self.keyStore
+        }
+        
+        if !delegator.did!.isEmpty {
+            self.did = delegator.did
+        }
     }
     
     
+    /**
+     * 지갑 키 생성
+     */
     public func createKey() -> MetadiumKey? {
         
         let entropy = Data.randomBytes(length: KDefine.kEntropy_Length)
@@ -93,17 +101,6 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
     
     
     /**
-     * 로컬에 저장되어 있는 privateKey로 keystore 생성
-     */
-    public func assignPrivateKey(privateKey: String) {
-        self.keyStore = try! EthereumKeystoreV3.init(privateKey: Data.init(hex: privateKey))
-        self.delegator.keyStore = self.keyStore
-    }
-    
-    
-    
-    
-    /**
      * 서비스 키 생성
      */
     
@@ -134,10 +131,39 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
         return nil
     }
     
+
+    
+    /**
+     * @param  sign data
+     */
+    
+    public func getSignature(data: Data) -> (Data?, String?, String?, String?) {
+        
+        if self.keyStore != nil {
+            let account:EthereumAccount! = try? EthereumAccount.init(keyStore: self.keyStore!)
+            
+            let signature = try? account.sign(data: data)
+            
+            let r = signature!.subdata(in: 0..<32).toHexString().withHexPrefix
+            let s = signature!.subdata(in: 32..<64).toHexString().withHexPrefix
+            let v = UInt8(signature![64]) + 27
+            
+            let vStr = String(format: "0x%02x", v)
+            print(vStr)
+            
+            let signData = (r.noHexPrefix + s.noHexPrefix + vStr.noHexPrefix).data(using: .utf8)
+            
+            return (signData!, r, s, vStr)
+        }
+        
+        return (nil, nil, nil, nil)
+    }
     
     
-    
-    public func getWalletSignature() -> (Data?, String, String, String) {
+    /**
+     * create_identity delegate sign
+     */
+    public func getCreateKeySignature() -> (Data?, String, String, String) {
         
         let resolvers = self.delegator.registryAddress.resolvers
         let providers = self.delegator.registryAddress.providers
@@ -205,7 +231,10 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
     
     
     
-    
+    /**
+     * add_public_key_delegated sign
+     */
+
     public func getPublicKeySignature() -> (Data?, String, String, String) {
         let publicKeyResolverAddress = self.delegator.registryAddress.publicKey
 
@@ -248,6 +277,9 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
     
     
     
+    /**
+     * add_key_delegated sign
+     */
     
     public func getSignServiceId(serviceID: String, serviceAddress: String) -> (String, Data?, String, String, String, String) {
         
@@ -293,76 +325,46 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
     
     
     
-    
-    
     //transactionReceipt
-    public func transactionReceipt(type: MetaTransactionType, txId: String) throws -> EthereumTransactionReceipt {
-        
-        let group = DispatchGroup()
-        group.enter()
-        
-        
-        var transactionReceipt: EthereumTransactionReceipt!
-        var clientError: EthereumClientError?
-        
+    public func transactionReceipt(type: MetaTransactionType, txId: String, complection: TransactionRecipt?) -> Void {
+
         self.delegator.ethereumClient.eth_getTransactionReceipt(txHash: txId) { (error, receipt) in
             if error != nil {
-                clientError = error
-                
-                return
+                return complection!(error, nil)
             }
             
             if receipt == nil {
-                let _ = try? self.transactionReceipt(type: type, txId: txId)
-                
-                return
+                return complection!(error, nil)
             }
             
             if receipt!.status.rawValue == 0 {
-                return
+                return complection!(nil, receipt)
             }
         
-            
-            transactionReceipt = receipt!
         
             if type == .createDid {
                 
+                var isEin: Bool?
                 DispatchQueue.global().sync {
-                    let isEin = self.getEin(receipt: receipt!)
-                    
-                    if isEin {
-                        group.leave()
-                    }
+                    isEin = self.getEin(receipt: receipt!)
                 }
                 
-                return
+                
+                if isEin != nil {
+                    return complection!(nil, receipt)
+                }
             }
             
             if type == .addWalletPublicKey {
                 
-                group.leave()
-                
-                return
+                return complection!(nil, receipt)
             }
             
             if type == .addServicePublicKey {
                 
-                group.leave()
-                
-                return
+                return complection!(nil, receipt)
             }
-            
-            group.leave()
         }
-        
-        group.wait()
-        
-        if clientError != nil {
-            throw clientError!
-        }
-        
-        return transactionReceipt
-        
     }
     
     
@@ -381,18 +383,36 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
     }
     
     
+    public func getKey() -> MetadiumKey? {
+        if self.keyStore != nil {
+            let account = try? EthereumAccount.init(keyStore: self.keyStore!)
+            
+            let key = MetadiumKey()
+            key.address = account?.address
+            key.privateKey = account?.privateKey
+            key.publicKey = account?.publicKey
+            
+            return key
+        }
+        
+        return nil
+    }
+    
+    
     public func getDid() -> String {
         
-        var did: String = ""
+        if !self.did.isEmpty {
+            return self.did
+        }
         
         if self.metaID != nil && !self.metaID.isEmpty {
             
-            did = self.delegator.didPrefix + self.metaID
+            self.did = self.delegator.didPrefix + self.metaID
             
-            return did
+            return self.did
         }
         
-        return did
+        return self.did
     }
     
     

@@ -31,13 +31,25 @@ pod 'KeepinCRUD'
     self.delegator = MetaDelegator.init() 
 
     //delegate url, node url, didPrefix를 직접 설정할 때 초기화 부분에 셋팅
-    //self.delegator = MetaDelegator.init(delegatorUrl: "https://delegator.metadium.com", nodeUrl: "https://api.metadium.com/prod", didPrefix: "did:meta:testnet:")
-
+    //let delegator = MetaDelegator.init(delegatorUrl: "https://delegator.metadium.com", nodeUrl: "https://api.metadium.com/prod", didPrefix: "did:meta:testnet:", did: nil, privateKey: nil)
     let wallet = MetaWallet.init(delegator: self.delegator)
 
     //key.privateKey, key.publicKey, key.address
     let key = wallet.createKey()
 
+
+
+### load KeyStore
+
+    let delegator = MetaDelegator.init(delegatorUrl: "https://delegator.metadium.com", nodeUrl: "https://api.metadium.com/prod", didPrefix: "did:meta:testnet:", did: "did:meta:testnet:0x00000000000000000000000000002991", privateKey: "0x4439fecf13a924cf2790733fe097f92de747638c6ba863f98b648b60b14ea204")
+
+    let wallet = MetaWallet.init(delegator: delegator)
+
+
+### key sign
+
+    let data = "test data".data(using: .utf8)
+    let (signature, r, s, v) = wallet.getSignature(data: data!)
 
 
 ### 로컬 privatekey assign 및 sign값 
@@ -48,8 +60,31 @@ pod 'KeepinCRUD'
 
 ### DID 생성
 
-    let (type, txID) = self.delegator.createIdentityDelegated(signData: signData!, r: r, s: s, v: v)
-    let receipt = try? wallet.transactionReceipt(type: type!, txId: txID!)
+    let (signData, r, s, v) = wallet.getCreateKeySignature()
+
+    delegator.createIdentityDelegated(signData: signData!, r: r, s: s, v: v) { (type, txId, error) in
+        if error != nil {
+            return
+        }
+        
+        self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
+        
+            if error != nil {
+                return
+            }
+        
+            if receipt == nil {
+                self.wallet.transactionReceipt(type: type!, txId: txId!, complection: nil)
+            
+                return
+            }
+        
+            if receipt!.status == .success {
+                //Todo...
+            }
+        }
+    }
+}
 
 
 ### 서비스 키 생성
@@ -60,21 +95,66 @@ pod 'KeepinCRUD'
 
 #### add_public_key_delegated : 지갑 publicKey를 publickey resolver에 delegate를 통해 등록
 
-    let (type, txID) = self.delegator.addPublicKeyDelegated(signData: signData!, r: r, s: s, v: v)
-    let receipt = try? self.wallet.transactionReceipt(type: type!, txId: txID)
-    print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
+    let (signData, r, s, v) = self.wallet.getPublicKeySignature()
+    
+    self.delegator.addPublicKeyDelegated(signData: signData!, r: r, s: s, v: v) { (type, txId, error) in
+    
+        if error != nil {
+            return
+            }
+    
+        self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
+            if error != nil {
+                return
+            }
+        
+            if receipt == nil {
+                self.wallet.transactionReceipt(type: type!, txId: txId!, complection: nil)
+            
+                return
+            }
+        
+            print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
+        
+            if receipt!.status == .success {
+                //Todo...
+            }
+        }
+    }
+}
 
 
 #### add_key_delegated :  서비스키를 service_key resolver에 delegate를 통해 등록
 
-    let (addr, signData, serviceId, r, s, v)  = wallet.getSignServiceId(serviceID: "5933e64b-cb34-11ea-9e0f-020c6496fbdc", serviceAddress: address!)
-    let (type, txID) = self.delegator.addKeyDelegated(address: addr, signData: signData!, serviceId: servieId, r: r, s: s, v: v)
-    let receipt = try? self.wallet.transactionReceipt(type: type!, txId: txID)
+    let (addr, signData, servieId, r, s, v) = self.wallet.getSignServiceId(serviceID: "5933e64b-cb34-11ea-9e0f-020c6496fbdc", serviceAddress: address!)
 
-    //성공시
-    if receipt!.status == .success {
+    self.delegator.addKeyDelegated(address: addr, signData: signData!, serviceId: servieId, r: r, s: s, v: v) { (type, txId, error) in 
+        if error != nil {
+            return
+        }
+    
+        self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
+            if error != nil {
+                return
+            }
         
+            if receipt == nil {
+                self.wallet.transactionReceipt(type: type!, txId: txId!, complection: nil)
+            
+                return
+            }
+        
+            print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
+        
+            if receipt!.status == .success {
+                //Todo...
+            }
+            else {
+                //Todo...
+            }
+        }
     }
+}
     
     
 ## Author

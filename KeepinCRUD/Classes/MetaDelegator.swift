@@ -43,23 +43,35 @@ public class MetaDelegator: NSObject {
     
     var messenger: MetaDelegatorMessenger!
     
+    var privateKey: String?
+    var did: String?
+    
     
     /**
      * @param  delegate Url
      * @param node Url
      * @param didPrefix
      */
-    public init(delegatorUrl: String? = "https://testdelegator.metadium.com", nodeUrl: String? = "https://api.metadium.com/dev", didPrefix: String? = "did:meta:testnet:") {
+    public init(delegatorUrl: String? = "https://testdelegator.metadium.com", nodeUrl: String? = "https://api.metadium.com/dev", didPrefix: String? = "did:meta:testnet:", did: String? = "", privateKey: String? = "") {
         super.init()
         
         self.delegatorUrl = URL(string: delegatorUrl!)
         self.nodeUrl = URL(string: nodeUrl!)
         self.didPrefix = didPrefix!
+        self.privateKey = privateKey
+        self.did = did
         
         self.ethereumClient = EthereumClient.init(url: self.nodeUrl)
         
-        self.registryAddress = self.getAllServiceAddress()
+        self.getAllServiceAddress { (registryAddress, error) in
+            if error != nil {
+                return
+            }
+            
+            self.registryAddress = registryAddress
+        }
     }
+    
     
     
     
@@ -68,28 +80,21 @@ public class MetaDelegator: NSObject {
      * get registry address
      * @return registryAddress
      */
-    private func getAllServiceAddress() -> RegistryAddress {
-        
-        let group = DispatchGroup()
-        group.enter()
-        
-        
-        var registryAddress: RegistryAddress?
+    private func getAllServiceAddress(complection: @escaping(RegistryAddress?, Error?) -> Void) {
         
         DataProvider.jsonRpcMethod(url: self.delegatorUrl, method: "get_all_service_addresses") { (response, data, error) in
             
             if error != nil {
-                return
+                return complection(nil, error)
             }
             
-            registryAddress = RegistryAddress.init(dic: data as! Dictionary<String, Any>)
-            
-            group.leave()
+            if data != nil {
+                let registryAddress = RegistryAddress.init(dic: data as! Dictionary<String, Any>)
+                
+                return complection(registryAddress, nil)
+            }
+
         }
-        
-        group.wait()
-        
-        return registryAddress!
     }
     
     
@@ -138,23 +143,23 @@ public class MetaDelegator: NSObject {
     
     
     
-    
     /**
      * DID 생성
      */
-    public func createIdentityDelegated(signData: Data, r: String, s: String, v: String) -> (MetaTransactionType?, String?) {
-        
-        var txID: String = ""
+    public func createIdentityDelegated(signData: Data, r: String, s: String, v: String, complection: @escaping(MetaTransactionType?, String?, Error?) -> Void) {
         
         if self.registryAddress == nil {
             
             DispatchQueue.global().sync {
-                self.registryAddress = self.getAllServiceAddress()
+                self.getAllServiceAddress { (registryAddress, error) in
+                    if error != nil {
+                        return
+                    }
+                    
+                    self.registryAddress = registryAddress
+                }
             }
         }
-        
-        let group = DispatchGroup()
-        group.enter()
         
         let resolvers = self.registryAddress.resolvers
         let providers = self.registryAddress.providers
@@ -164,19 +169,13 @@ public class MetaDelegator: NSObject {
         
         DataProvider.jsonRpcMethod(url: self.delegatorUrl, method: "create_identity", parmas: params) {(response, result, error) in
             if error != nil {
-                return
+                return complection(.createDid, nil, error)
             }
             
             if let txId = result as? String {
-                txID = txId
-                
-                group.leave()
+                return complection(.createDid, txId, nil)
             }
         }
-        
-        group.wait()
-        
-        return (.createDid, txID)
     }
     
     
@@ -192,9 +191,20 @@ public class MetaDelegator: NSObject {
      * @return transactionType, txID
      */
     
-    public func addPublicKeyDelegated(signData: Data, r: String, s: String, v: String) -> (MetaTransactionType?, String) {
+    public func addPublicKeyDelegated(signData: Data, r: String, s: String, v: String, complection: @escaping(MetaTransactionType?, String?, Error?) -> Void) {
         
-        var txID: String = ""
+        if self.registryAddress == nil {
+            
+            DispatchQueue.global().sync {
+                self.getAllServiceAddress { (registryAddress, error) in
+                    if error != nil {
+                        return
+                    }
+                    
+                    self.registryAddress = registryAddress
+                }
+            }
+        }
         
         let resolver_publicKey = self.registryAddress.publicKey
         let addr = self.keyStore?.addresses?.first?.address
@@ -203,30 +213,15 @@ public class MetaDelegator: NSObject {
 
         let params = [["resolver_address" : resolver_publicKey!, "associated_address": addr!, "public_key": publicKey, "v": v, "r": r, "s": s, "timestamp": self.timeStamp!]]
         
-        let group = DispatchGroup()
-        group.enter()
-        
         DataProvider.jsonRpcMethod(url: self.delegatorUrl, method: "add_public_key_delegated", parmas: params) {(response, result, error) in
             if error != nil {
-                group.leave()
-                
-                return
+                return complection(.addWalletPublicKey, nil, error)
             }
             
             if let txId = result as? String {
-                txID = txId
-                
-                group.leave()
-                
-                return
+                return complection(.addWalletPublicKey, txId, nil)
             }
-            
-            group.leave()
         }
-        
-        group.wait()
-        
-        return (.addWalletPublicKey, txID)
     }
     
     
@@ -242,9 +237,21 @@ public class MetaDelegator: NSObject {
      * @return transactionType, txID
      */
     
-    public func addKeyDelegated(address: String, signData: Data, serviceId: String, r: String, s: String, v: String) -> (MetaTransactionType?, String) {
+    public func addKeyDelegated(address: String, signData: Data, serviceId: String, r: String, s: String, v: String, complection: @escaping(MetaTransactionType?, String?, Error?) -> Void) {
         
-        var txID: String = ""
+        if self.registryAddress == nil {
+            
+            DispatchQueue.global().sync {
+                self.getAllServiceAddress { (registryAddress, error) in
+                    if error != nil {
+                        return
+                    }
+                    
+                    self.registryAddress = registryAddress
+                }
+            }
+        }
+        
         
         let resolver = self.registryAddress.serviceKey
         let addr = self.keyStore.addresses?.first?.address
@@ -252,30 +259,16 @@ public class MetaDelegator: NSObject {
         let params = [["resolver_address" : resolver!, "associated_address": addr!, "key": address, "symbol": serviceId, "v": v, "r": r, "s": s, "timestamp": self.timeStamp!]]
         print(params)
         
-        let group = DispatchGroup()
-        group.enter()
-        
         DataProvider.jsonRpcMethod(url: self.delegatorUrl, method: "add_key_delegated", parmas: params) {(response, result, error) in
             if error != nil {
-                group.leave()
-                
-                return
+                return complection(.addServicePublicKey, nil, error)
             }
             
             if let txId = result as? String {
-                txID = txId
                 
-                group.leave()
-                
-                return
+                return complection(.addServicePublicKey, txId, error)
             }
-            
-            group.leave()
         }
-        
-        group.wait()
-        
-        return (.addServicePublicKey, txID)
     }
     
     public func removeKeyDelegated() {

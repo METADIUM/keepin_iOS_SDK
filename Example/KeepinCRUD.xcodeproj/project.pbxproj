@@ -14,6 +14,8 @@
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		90580AA56AE0B082007A587F /* Pods_KeepinCRUD_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB665F837DE3CB5808F2E450 /* Pods_KeepinCRUD_Tests.framework */; };
+		E30C087C25AD7FD40032C89E /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30C087A25AD7FD40032C89E /* FirstViewController.swift */; };
+		E30C088325AD80020032C89E /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E30C088225AD80020032C89E /* ViewController.xib */; };
 		F674A1F099BB898AE7C3DA52 /* Pods_KeepinCRUD_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9929DB4576F76C6065661C92 /* Pods_KeepinCRUD_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -46,6 +48,8 @@
 		A62A057AFE860DA065873173 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		AE177264ABB985D8207E2EAB /* Pods-KeepinCRUD_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KeepinCRUD_Example.debug.xcconfig"; path = "Target Support Files/Pods-KeepinCRUD_Example/Pods-KeepinCRUD_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		DB665F837DE3CB5808F2E450 /* Pods_KeepinCRUD_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KeepinCRUD_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E30C087A25AD7FD40032C89E /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
+		E30C088225AD80020032C89E /* ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
 		E6011C8022C6C0A2370CEB57 /* Pods-KeepinCRUD_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KeepinCRUD_Tests.release.xcconfig"; path = "Target Support Files/Pods-KeepinCRUD_Tests/Pods-KeepinCRUD_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		FBE4B4636422C038468DC7EA /* KeepinCRUD.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = KeepinCRUD.podspec; path = ../KeepinCRUD.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		FEE52145B791C7021DE50DC2 /* Pods-KeepinCRUD_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KeepinCRUD_Example.release.xcconfig"; path = "Target Support Files/Pods-KeepinCRUD_Example/Pods-KeepinCRUD_Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -106,6 +110,8 @@
 			children = (
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
+				E30C088225AD80020032C89E /* ViewController.xib */,
+				E30C087A25AD7FD40032C89E /* FirstViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
@@ -254,6 +260,7 @@
 			files = (
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
+				E30C088325AD80020032C89E /* ViewController.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -387,6 +394,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E30C087C25AD7FD40032C89E /* FirstViewController.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 			);
