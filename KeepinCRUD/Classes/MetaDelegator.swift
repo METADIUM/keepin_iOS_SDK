@@ -35,16 +35,7 @@ public class MetaDelegator: NSObject {
     
     var timeStamp: Int!
     
-    var metaID: String!
-    
-    var metaWallet: MetaWallet!
-    var transactionGroup = DispatchGroup()
-    var transactionQueue = DispatchQueue(label: "transactionGroupQueue")
-    
     var messenger: MetaDelegatorMessenger!
-    
-    var privateKey: String?
-    var did: String?
     
     
     /**
@@ -52,26 +43,41 @@ public class MetaDelegator: NSObject {
      * @param node Url
      * @param didPrefix
      */
-    public init(delegatorUrl: String? = "https://testdelegator.metadium.com", nodeUrl: String? = "https://api.metadium.com/dev", didPrefix: String? = "did:meta:testnet:", did: String? = "", privateKey: String? = "") {
+    public init(delegatorUrl: String? = "https://testdelegator.metadium.com", nodeUrl: String? = "https://api.metadium.com/dev", didPrefix: String? = "did:meta:testnet:") {
         super.init()
         
         self.delegatorUrl = URL(string: delegatorUrl!)
         self.nodeUrl = URL(string: nodeUrl!)
         self.didPrefix = didPrefix!
-        self.privateKey = privateKey
-        self.did = did
         
         self.ethereumClient = EthereumClient.init(url: self.nodeUrl)
         
-        self.getAllServiceAddress { (registryAddress, error) in
-            if error != nil {
-                return
-            }
-            
-            self.registryAddress = registryAddress
-        }
+        self.getAllServiceAddress()
     }
     
+    
+    
+    private func getAllServiceAddress() {
+        if self.registryAddress == nil {
+            
+            let group = DispatchGroup()
+            group.enter()
+            
+            self.getAllServiceAddress { (registryAddress, error) in
+                if error != nil {
+                    group.leave()
+                    
+                    return
+                }
+                
+                self.registryAddress = registryAddress
+                
+                group.leave()
+            }
+            
+            group.wait()
+        }
+    }
     
     
     
@@ -148,18 +154,7 @@ public class MetaDelegator: NSObject {
      */
     public func createIdentityDelegated(signData: Data, r: String, s: String, v: String, complection: @escaping(MetaTransactionType?, String?, Error?) -> Void) {
         
-        if self.registryAddress == nil {
-            
-            DispatchQueue.global().sync {
-                self.getAllServiceAddress { (registryAddress, error) in
-                    if error != nil {
-                        return
-                    }
-                    
-                    self.registryAddress = registryAddress
-                }
-            }
-        }
+        self.getAllServiceAddress()
         
         let resolvers = self.registryAddress.resolvers
         let providers = self.registryAddress.providers
@@ -193,18 +188,7 @@ public class MetaDelegator: NSObject {
     
     public func addPublicKeyDelegated(signData: Data, r: String, s: String, v: String, complection: @escaping(MetaTransactionType?, String?, Error?) -> Void) {
         
-        if self.registryAddress == nil {
-            
-            DispatchQueue.global().sync {
-                self.getAllServiceAddress { (registryAddress, error) in
-                    if error != nil {
-                        return
-                    }
-                    
-                    self.registryAddress = registryAddress
-                }
-            }
-        }
+        self.getAllServiceAddress()
         
         let resolver_publicKey = self.registryAddress.publicKey
         let addr = self.keyStore?.addresses?.first?.address
@@ -239,19 +223,7 @@ public class MetaDelegator: NSObject {
     
     public func addKeyDelegated(address: String, signData: Data, serviceId: String, r: String, s: String, v: String, complection: @escaping(MetaTransactionType?, String?, Error?) -> Void) {
         
-        if self.registryAddress == nil {
-            
-            DispatchQueue.global().sync {
-                self.getAllServiceAddress { (registryAddress, error) in
-                    if error != nil {
-                        return
-                    }
-                    
-                    self.registryAddress = registryAddress
-                }
-            }
-        }
-        
+        self.getAllServiceAddress()
         
         let resolver = self.registryAddress.serviceKey
         let addr = self.keyStore.addresses?.first?.address
@@ -271,10 +243,10 @@ public class MetaDelegator: NSObject {
         }
     }
     
+    
+    
     public func removeKeyDelegated() {
         
     }
 
-    
-    
 }

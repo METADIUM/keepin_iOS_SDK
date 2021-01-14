@@ -37,25 +37,22 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func loadKeyButtonAction() {
         
-        //delegate url, node url, didPrefix를 직접 설정할 때
-
-        let delegator = MetaDelegator.init(delegatorUrl: "https://delegator.metadium.com", nodeUrl: "https://api.metadium.com/prod", didPrefix: "did:meta:testnet:", did: "did:meta:testnet:0x00000000000000000000000000002991", privateKey: "0x4439fecf13a924cf2790733fe097f92de747638c6ba863f98b648b60b14ea204")
+        let delegator = MetaDelegator.init()
         
-        
-        self.wallet = MetaWallet.init(delegator: delegator)
-        
+        self.wallet = MetaWallet.init(delegator: delegator, nemonic: "found dilemma able enemy wagon review bronze wall attend cannon patient script", did: "did:meta:testnet:0x00000000000000000000000000002991")
         
         DispatchQueue.main.async {
             self.didLabel.text =  self.wallet!.getDid()
-            
         }
+        
         
         let key = self.wallet!.getKey()
         
         if key != nil {
-            print(key?.privateKey! ?? "")
-            print(key?.publicKey! ?? "")
-            print(key?.address! ?? "")
+            print("privateKey: \(key?.privateKey! ?? "")")
+            print("publicKey: \(key?.publicKey! ?? "")")
+            print("address: \(key?.address! ?? "")")
+            print("nemonic: \(key?.nemonic! ?? "")")
         }
     }
     

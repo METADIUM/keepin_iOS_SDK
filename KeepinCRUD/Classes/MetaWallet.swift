@@ -30,6 +30,7 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
     var keyStore: EthereumKeystoreV3?
     
     var did: String! = ""
+    var nemonic: String? = ""
     
     
     func sendTxID(txID: String, type: MetaTransactionType) {
@@ -38,22 +39,38 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
     }
     
     
-    public init(delegator: MetaDelegator) {
+    public init(delegator: MetaDelegator, nemonic: String? = "", did: String? = "") {
         super.init()
         
         self.delegator = delegator
         self.delegator.messenger = self
         
+        self.nemonic = nemonic
+        self.did = did
+        
         /**
          * 로컬에 저장되어 있는 privateKey로 keystore를 가져온다.
          */
-        if !delegator.privateKey!.isEmpty {
-            self.keyStore = try! EthereumKeystoreV3.init(privateKey: Data.init(hex: delegator.privateKey!))
-            self.delegator.keyStore = self.keyStore
-        }
-        
-        if !delegator.did!.isEmpty {
-            self.did = delegator.did
+        if !nemonic!.isEmpty {
+            let seed = BIP39.seedFromMmemonics(nemonic!)
+            
+            do {
+                let bip32keyStore = try BIP32Keystore(seed: seed!, password: "", prefixPath: KDefine.kBip44PrefixPath, aesMode: KDefine.kAes128CBC)
+                let address = bip32keyStore?.addresses?.first
+                
+                do {
+                    let privateKey = try bip32keyStore?.UNSAFE_getPrivateKeyData(password: "", account: address!).toHexString()
+                    self.keyStore = try! EthereumKeystoreV3.init(privateKey: Data.init(hex: privateKey!))
+                    
+                    self.delegator.keyStore = self.keyStore!
+                    
+                } catch {
+                    print(error.localizedDescription)
+                }
+                
+            } catch {
+                print(error.localizedDescription)
+            }
         }
     }
     
@@ -76,7 +93,7 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
                 let privateKey = try store?.UNSAFE_getPrivateKeyData(password: "", account: address!).toHexString()
                 self.keyStore = try! EthereumKeystoreV3.init(privateKey: Data.init(hex: privateKey!))
                 
-                self.delegator.keyStore = keyStore!
+                self.delegator.keyStore = self.keyStore!
                 
                 let account = try? EthereumAccount.init(keyStore: self.keyStore!)
                 
@@ -84,6 +101,7 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
                 key.address = address?.address
                 key.privateKey = account?.privateKey
                 key.publicKey = account?.publicKey
+                key.nemonic = nemonic
                 
                 return key
                 
@@ -121,6 +139,7 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
             key.address = address?.address
             key.privateKey = account?.privateKey
             key.publicKey = account?.publicKey
+            key.nemonic = nemonic
             
             return key
             
@@ -346,6 +365,9 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
                 
                 var isEin: Bool?
                 DispatchQueue.global().sync {
+                    self.metaID = ""
+                    self.did = ""
+                    
                     isEin = self.getEin(receipt: receipt!)
                 }
                 
@@ -391,6 +413,7 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
             key.address = account?.address
             key.privateKey = account?.privateKey
             key.publicKey = account?.publicKey
+            key.nemonic = self.nemonic
             
             return key
         }
@@ -433,8 +456,9 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
         
         var address: String = ""
         
-        if self.delegator.keyStore != nil {
-            address = (self.delegator.keyStore.addresses?.first!.address)!
+        
+        if self.keyStore != nil  {
+            address = (self.keyStore?.addresses?.first!.address)!
         }
         
         return address

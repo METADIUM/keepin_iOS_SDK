@@ -45,8 +45,7 @@ class ViewController: UIViewController {
         
         //delegate url, node url, didPrefix를 직접 설정할 때
         //self.delegator = MetaDelegator.init(delegatorUrl: "https://delegator.metadium.com", nodeUrl: "https://api.metadium.com/prod", didPrefix: "did:meta:testnet:")
-        
-        
+                
         self.wallet = MetaWallet.init(delegator: delegator)
         
         self.addPublicKeyButton.isEnabled = false
@@ -64,8 +63,8 @@ class ViewController: UIViewController {
     @IBAction func walletKey() {
         //로컬에 키가 없을 경우 생성
         let key = self.wallet.createKey()
-        print("privateKey: \(key!.privateKey), publicKey: \(key!.publicKey), address: \(key!.address)")
         
+        print("privateKey: \(key?.privateKey ?? "")\npublicKey: \(key?.publicKey ?? "")\naddress: \(key?.address ?? "")\nnemonic: \(key?.nemonic ?? "")")
         
         //로컬에 프라이빗 키가 이미 저장이 되어 있을 때
         //self.wallet.assignPrivateKey(privateKey: (key?.privateKey)!)
@@ -80,7 +79,7 @@ class ViewController: UIViewController {
     
     //DID 생성
     @IBAction func createDidButtonAction() {
-        let (signData, r, s, v) = wallet.getCreateKeySignature()
+        let (signData, r, s, v) = self.wallet.getCreateKeySignature()
         
         delegator.createIdentityDelegated(signData: signData!, r: r, s: s, v: v) { (type, txId, error) in
             if error != nil {
@@ -190,7 +189,7 @@ class ViewController: UIViewController {
             
             return
         }
-        
+    
         
         let address = self.serviceKey.address
         

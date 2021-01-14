@@ -11,4 +11,14 @@ public class MetadiumKey: NSObject {
     public var publicKey: String?
     public var privateKey: String?
     public var address: String?
+    public var nemonic: String?
+}
+
+
+public class SignatureData: NSObject {
+    
+    public var signData: Data?
+    public var r: String?
+    public var s: String?
+    public var v: String?
 }
