@@ -396,7 +396,7 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
         
         if (result.object(forKey: "ein") as! String).count > 0 {
             let ein = BigUInt(hex: (result.object(forKey: "ein") as? String)!)
-            self.metaID = self.getInt16Byte(int: ein!).toHexString().withHexPrefix
+            self.metaID = self.getInt32Byte(int: ein!).toHexString().withHexPrefix
             
             return true
         }
@@ -430,7 +430,9 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
         
         if self.metaID != nil && !self.metaID.isEmpty {
             
-            self.did = self.delegator.didPrefix + self.metaID
+            self.did = self.delegator.didPrefix + self.metaID.noHexPrefix
+            
+            print(self.metaID)
             
             return self.did
         }
@@ -445,7 +447,7 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
         let did = getDid()
         
         if !did.isEmpty {
-            kid = did + "#MetaManagementKey#" + self.getAddress()
+            kid = did + "#MetaManagementKey#" + self.getAddress().lowercased().noHexPrefix
         }
         
         return kid

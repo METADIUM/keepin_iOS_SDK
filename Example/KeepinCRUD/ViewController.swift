@@ -28,6 +28,8 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var didLabel: UILabel!
+    @IBOutlet weak var kidLabel: UILabel!
+    
     @IBOutlet weak var signatureLabel: UILabel!
     
     
@@ -109,6 +111,7 @@ class ViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.didLabel.text = self.did
                     self.signatureLabel.text = sign
+                    self.kidLabel.text = self.wallet.getKid()
                 }
             }
         }
