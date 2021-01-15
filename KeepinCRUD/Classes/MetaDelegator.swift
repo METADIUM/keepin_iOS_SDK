@@ -86,7 +86,7 @@ public class MetaDelegator: NSObject {
      * get registry address
      * @return registryAddress
      */
-    private func getAllServiceAddress(complection: @escaping(RegistryAddress?, Error?) -> Void) {
+    public func getAllServiceAddress(complection: @escaping(RegistryAddress?, Error?) -> Void) {
         
         DataProvider.jsonRpcMethod(url: self.delegatorUrl, method: "get_all_service_addresses") { (response, data, error) in
             

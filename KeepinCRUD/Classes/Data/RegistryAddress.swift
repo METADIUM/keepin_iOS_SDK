@@ -9,13 +9,13 @@ import UIKit
 
 public class RegistryAddress: NSObject {
     
-    var identityRegistry: String?
-    var providers: [String]?
-    var publicKey: String?
-    var publicKeyAll: [String]?
-    var resolvers: [String]?
-    var serviceKey: String?
-    var serviceKeyAll: [String]?
+    public var identityRegistry: String?
+    public var providers: [String]?
+    public var publicKey: String?
+    public var publicKeyAll: [String]?
+    public var resolvers: [String]?
+    public var serviceKey: String?
+    public var serviceKeyAll: [String]?
     
     
     init(dic: Dictionary<String, Any>) {

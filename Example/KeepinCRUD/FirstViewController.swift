@@ -39,6 +39,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         
         let delegator = MetaDelegator.init()
         
+        
         self.wallet = MetaWallet.init(delegator: delegator, nemonic: "found dilemma able enemy wagon review bronze wall attend cannon patient script", did: "did:meta:testnet:0x00000000000000000000000000002991")
         
         DispatchQueue.main.async {
