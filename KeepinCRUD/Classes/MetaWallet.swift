@@ -17,6 +17,9 @@ public enum MetaTransactionType {
     case createDid
     case addWalletPublicKey
     case addServicePublicKey
+    case removeKeys
+    case removePublicKey
+    case removeAssociatedAddress
 }
 
 public class MetaWallet: NSObject, MetaDelegatorMessenger {
@@ -343,6 +346,113 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
     }
     
     
+    public func getRemoveKeySign() -> (Data?, String, String, String) {
+        let serviceKey = self.delegator.registryAddress.serviceKey
+       
+        let temp = Data([0x19, 0x00])
+        let serviceKeyData = Data.fromHex(serviceKey!)
+        let msg = KDefine.KRemove_allKey.data(using: .utf8)
+        
+        var timeStamp: Int!
+        
+        DispatchQueue.global().sync {
+            timeStamp = self.delegator.getTimeStamp()
+        }
+        
+        let timeData = self.getInt32Byte(int: BigUInt(timeStamp))
+        
+        let data = (temp + serviceKeyData! + msg! + timeData).keccak256
+        let prefixData = (KDefine.kPrefix + String(data.count)).data(using: .ascii)
+        
+        let account = try? EthereumAccount.init(keyStore: self.keyStore!)
+        let signature = try? account!.sign(data: prefixData! + data)
+       
+        let r = signature!.subdata(in: 0..<32).toHexString().withHexPrefix
+        let s = signature!.subdata(in: 32..<64).toHexString().withHexPrefix
+        let v = UInt8(signature![64]) + 27
+        let vStr = String(format: "0x%02x", v)
+       
+        let signData = (r.noHexPrefix + s.noHexPrefix + vStr.noHexPrefix).data(using: .utf8)
+        
+        return (signData!, r, s, vStr)
+    }
+    
+    
+    public func getRemovePublicKeySign() -> (Data?, String, String, String) {
+        let publicKey = self.delegator.registryAddress.publicKey
+       
+        let temp = Data([0x19, 0x00])
+        let msg = KDefine.KRemove_PubliKey.data(using: .utf8)
+        let publickeyData = Data.fromHex(publicKey!)
+        
+        var timeStamp: Int!
+        
+        DispatchQueue.global().sync {
+            timeStamp = self.delegator.getTimeStamp()
+        }
+        
+        let associateAddrData = Data.fromHex((self.keyStore!.addresses?.first!.address)!)
+        
+        let timeData = self.getInt32Byte(int: BigUInt(timeStamp))
+        
+        let data = (temp + publickeyData! + msg! + associateAddrData! + timeData).keccak256
+        
+        let prefixData = (KDefine.kPrefix + String(data.count)).data(using: .ascii)
+        
+        let account = try? EthereumAccount.init(keyStore: self.keyStore!)
+        let signature = try? account!.sign(data: prefixData! + data)
+       
+        let r = signature!.subdata(in: 0..<32).toHexString().withHexPrefix
+        let s = signature!.subdata(in: 32..<64).toHexString().withHexPrefix
+        let v = UInt8(signature![64]) + 27
+        let vStr = String(format: "0x%02x", v)
+       
+        let signData = (r.noHexPrefix + s.noHexPrefix + vStr.noHexPrefix).data(using: .utf8)
+        
+        return (signData!, r, s, vStr)
+    }
+    
+    
+    public func getRemoveAssociatedAddressSign() -> (Data?, String, String, String) {
+        let identityRegistry = self.delegator.registryAddress.identityRegistry
+       
+        let temp = Data([0x19, 0x00])
+        let msg = KDefine.kRemove_Address_MyIdentity.data(using: .utf8)
+        let identityRegistryData = Data.fromHex(identityRegistry!)
+        
+        var timeStamp: Int!
+        
+        DispatchQueue.global().sync {
+            timeStamp = self.delegator.getTimeStamp()
+        }
+        
+        let associateAddrData = Data.fromHex((self.keyStore!.addresses?.first!.address)!)
+        
+        let timeData = self.getInt32Byte(int: BigUInt(timeStamp))
+        
+        let ein = self.getDid().replacingOccurrences(of: self.delegator.didPrefix, with: "").withHexPrefix
+        let einData = self.getInt32Byte(int: BigUInt(hex: ein)!)
+        
+        let data = (temp + identityRegistryData! + msg! + einData + associateAddrData! + timeData).keccak256
+        
+        let prefixData = (KDefine.kPrefix + String(data.count)).data(using: .ascii)
+        
+        let account = try? EthereumAccount.init(keyStore: self.keyStore!)
+        let signature = try? account!.sign(data: prefixData! + data)
+       
+        let r = signature!.subdata(in: 0..<32).toHexString().withHexPrefix
+        let s = signature!.subdata(in: 32..<64).toHexString().withHexPrefix
+        let v = UInt8(signature![64]) + 27
+        let vStr = String(format: "0x%02x", v)
+       
+        let signData = (r.noHexPrefix + s.noHexPrefix + vStr.noHexPrefix).data(using: .utf8)
+        
+        return (signData!, r, s, vStr)
+    }
+    
+    
+    
+    
     
     //transactionReceipt
     public func transactionReceipt(type: MetaTransactionType, txId: String, complection: TransactionRecipt?) -> Void {
@@ -377,15 +487,7 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
                 }
             }
             
-            if type == .addWalletPublicKey {
-                
-                return complection!(nil, receipt)
-            }
-            
-            if type == .addServicePublicKey {
-                
-                return complection!(nil, receipt)
-            }
+            return complection!(nil, receipt)
         }
     }
     

@@ -245,8 +245,67 @@ public class MetaDelegator: NSObject {
     
     
     
-    public func removeKeyDelegated() {
+    public func removeKeyDelegated(r: String, s: String, v: String, complection: @escaping(MetaTransactionType?, String?, Error?) -> Void) {
+        self.getAllServiceAddress()
         
+        let resolver = self.registryAddress.serviceKey
+        let addr = self.keyStore.addresses?.first?.address
+        
+        let params = [["resolver_address" : resolver!, "associated_address": addr!, "v": v, "r": r, "s": s, "timestamp": self.timeStamp!]]
+        print(params)
+        
+        DataProvider.jsonRpcMethod(url: self.delegatorUrl, method: "remove_keys_delegated", parmas: params) {(response, result, error) in
+            if error != nil {
+                return complection(.removeKeys, nil, error)
+            }
+            
+            if let txId = result as? String {
+                
+                return complection(.removeKeys, txId, error)
+            }
+        }
+    }
+    
+    
+    public func removePublicKeyDelegated(r: String, s: String, v: String, complection: @escaping(MetaTransactionType?, String?, Error?) -> Void) {
+        self.getAllServiceAddress()
+        
+        let resolver = self.registryAddress.publicKey
+        let addr = self.keyStore.addresses?.first?.address
+        
+        let params = [["resolver_address" : resolver!, "associated_address": addr!, "v": v, "r": r, "s": s, "timestamp": self.timeStamp!]]
+        print(params)
+        
+        DataProvider.jsonRpcMethod(url: self.delegatorUrl, method: "remove_public_key_delegated", parmas: params) {(response, result, error) in
+            if error != nil {
+                return complection(.removePublicKey, nil, error)
+            }
+            
+            if let txId = result as? String {
+                
+                return complection(.removePublicKey, txId, error)
+            }
+        }
+    }
+    
+    public func removeAssociatedAddressDelegated(r: String, s: String, v: String, complection: @escaping(MetaTransactionType?, String?, Error?) -> Void) {
+        self.getAllServiceAddress()
+        
+        let addr = self.keyStore.addresses?.first?.address
+        
+        let params = [["address_to_remove": addr!, "v": v, "r": r, "s": s, "timestamp": self.timeStamp!]]
+        print(params)
+        
+        DataProvider.jsonRpcMethod(url: self.delegatorUrl, method: "remove_associated_address_delegated", parmas: params) {(response, result, error) in
+            if error != nil {
+                return complection(.removeAssociatedAddress, nil, error)
+            }
+            
+            if let txId = result as? String {
+                
+                return complection(.removeAssociatedAddress, txId, error)
+            }
+        }
     }
 
 }

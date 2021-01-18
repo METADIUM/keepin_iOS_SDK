@@ -20,6 +20,8 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     
     
     var wallet: MetaWallet?
+    var delegator: MetaDelegator?
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,10 +39,9 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func loadKeyButtonAction() {
         
-        let delegator = MetaDelegator.init()
+        self.delegator = MetaDelegator.init()
         
-        
-        self.wallet = MetaWallet.init(delegator: delegator, nemonic: "found dilemma able enemy wagon review bronze wall attend cannon patient script", did: "did:meta:testnet:0x00000000000000000000000000002991")
+        self.wallet = MetaWallet.init(delegator: self.delegator!, nemonic: "found dilemma able enemy wagon review bronze wall attend cannon patient script", did: "did:meta:testnet:0x00000000000000000000000000002991")
         
         DispatchQueue.main.async {
             self.didLabel.text =  self.wallet!.getDid()
@@ -91,6 +92,100 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    
+    @IBAction func removeKeyButtonAction() {
+        if self.wallet != nil {
+            let (_, r, s, v) = self.wallet!.getRemoveKeySign()
+            
+            self.delegator?.removeKeyDelegated(r: r, s: s, v: v, complection: { (type, txId, error) in
+                if error != nil {
+                    return
+                }
+                
+                self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
+                    
+                    var title = ""
+                    if receipt!.status == .success {
+                        title = "RemoveKey:"  + "성공"
+                    }
+                    else {
+                        title = "RemoveKey:"  + "실패"
+                    }
+                    
+                    DispatchQueue.main.async {
+                        let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
+                        let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                        
+                        alert.addAction(action)
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                })
+            })
+        }
+    }
+    
+    @IBAction func removePublicKeyButtonAction() {
+        if self.wallet != nil {
+            let (_, r, s, v) = self.wallet!.getRemovePublicKeySign()
+            
+            self.delegator?.removePublicKeyDelegated(r: r, s: s, v: v, complection: { (type, txId, error) in
+                if error != nil {
+                    return
+                }
+                
+                self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
+                    
+                    var title = ""
+                    if receipt!.status == .success {
+                        title = "RemovePublicKey:"  + "성공"
+                    }
+                    else {
+                        title = "RemovePublicKey:"  + "실패"
+                    }
+                    
+                    DispatchQueue.main.async {
+                        let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
+                        let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                        
+                        alert.addAction(action)
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                })
+            })
+        }
+    }
+    
+    @IBAction func removeAssociatedAddressButtonAction() {
+        if self.wallet != nil {
+            let (_, r, s, v) = self.wallet!.getRemoveAssociatedAddressSign()
+            
+            self.delegator?.removeAssociatedAddressDelegated(r: r, s: s, v: v, complection: { (type, txId, error) in
+                if error != nil {
+                    return
+                }
+                
+                self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
+                    
+                    var title = ""
+                    if receipt!.status == .success {
+                        title = "RemoveAssociatedKey:"  + "성공"
+                    }
+                    else {
+                        title = "RemoveAssociatedKey:"  + "실패"
+                    }
+                    
+                    DispatchQueue.main.async {
+                        let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
+                        let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                        
+                        alert.addAction(action)
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                })
+            })
         }
     }
     

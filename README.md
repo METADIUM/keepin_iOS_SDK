@@ -155,6 +155,61 @@ pod 'KeepinCRUD'
         }
     }
 }
+
+
+### remove_keys_delegated
+
+    let (_, r, s, v) = self.wallet!.getRemoveKeySign()
+
+    self.delegator?.removeKeyDelegated(r: r, s: s, v: v, complection: { (type, txId, error) in
+        if error != nil {
+            return
+        }
+    
+        self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
+        
+            if receipt!.status == .success {
+                //Todo..
+            }
+        })
+    })
+    
+    
+### remove_public_key_delegated
+
+    let (_, r, s, v) = self.wallet!.getRemovePublicKeySign()
+
+    self.delegator?.removePublicKeyDelegated(r: r, s: s, v: v, complection: { (type, txId, error) in
+        if error != nil {
+            return
+        }
+    
+        self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
+        
+            if receipt!.status == .success {
+                //Todo...
+            }
+        })
+    })
+    
+### remove_associated_address_delegated
+
+    let (_, r, s, v) = self.wallet!.getRemoveAssociatedAddressSign()
+
+    self.delegator?.removeAssociatedAddressDelegated(r: r, s: s, v: v, complection: { (type, txId, error) in
+        if error != nil {
+            return
+        }
+    
+        self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
+        
+            if receipt!.status == .success {
+                //Todo...
+            }
+        })
+    })
+
+    
     
     
 ## Author
