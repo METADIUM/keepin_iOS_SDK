@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'KeepinCRUD'
-  s.version          = '0.1.5'
+  s.version          = '0.1.6'
   s.swift_version    = '4.2'
   s.summary          = 'Keepin Key CRUD'
 
@@ -31,7 +31,7 @@ TODO: Add long description of the pod here.
 
   s.ios.deployment_target = '12.0'
 
-  s.source_files = 'KeepinCRUD', 'KeepinCRUD/Classes/**/*'
+  s.source_files = 'KeepinCRUD/Classes/**/*'
   
   # s.resource_bundles = {
   #   'KeepinCRUD' => ['KeepinCRUD/Assets/*.png']

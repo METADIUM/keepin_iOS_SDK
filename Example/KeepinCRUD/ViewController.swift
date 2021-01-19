@@ -41,6 +41,15 @@ class ViewController: UIViewController {
         self.title = "Key Create & Delegate"
 
         
+        UIFont.familyNames.sorted().forEach{ familyName in
+                    print("*** \(familyName) ***")
+                    UIFont.fontNames(forFamilyName: familyName).forEach { fontName in
+                        print("\(fontName)")
+                    }
+                    print("---------------------")
+                }
+        
+        
         //디폴트는 https://testdelegator.metadium.com, https://api.metadium.com/dev, did:meta:testnet:
         self.delegator = MetaDelegator.init()
         
