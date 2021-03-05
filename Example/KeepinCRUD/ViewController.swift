@@ -90,79 +90,92 @@ class ViewController: UIViewController {
     
     //DID 생성
     @IBAction func createDidButtonAction() {
-        let (signData, r, s, v) = self.wallet.getCreateKeySignature()
-        
-        delegator.createIdentityDelegated(signData: signData!, r: r, s: s, v: v) { (type, txId, error) in
-            if error != nil {
-                return
-            }
+        do {
+            let (signData, r, s, v) = try self.wallet.getCreateKeySignature()
             
-            self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
-                
+            delegator.createIdentityDelegated(signData: signData!, r: r, s: s, v: v) { (type, txId, error) in
                 if error != nil {
                     return
                 }
                 
-                if receipt == nil {
-                    self.wallet.transactionReceipt(type: type!, txId: txId!, complection: nil)
+                self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
                     
-                    return
-                }
-                
-                print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
-                
-                
-                self.did = self.wallet.getDid()
-                print(self.did)
-                
-                let sign = String(data: signData!, encoding: .utf8)?.withHexPrefix
-                
-                DispatchQueue.main.async {
-                    self.didLabel.text = self.did
-                    self.signatureLabel.text = sign
-                    self.kidLabel.text = self.wallet.getKid()
+                    if error != nil {
+                        return
+                    }
+                    
+                    if receipt == nil {
+                        self.wallet.transactionReceipt(type: type!, txId: txId!, complection: nil)
+                        
+                        return
+                    }
+                    
+                    print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
+                    
+                    
+                    self.did = self.wallet.getDid()
+                    print(self.did)
+                    
+                    let sign = String(data: signData!, encoding: .utf8)?.withHexPrefix
+                    
+                    DispatchQueue.main.async {
+                        self.didLabel.text = self.did
+                        self.signatureLabel.text = sign
+                        self.kidLabel.text = self.wallet.getKid()
+                    }
                 }
             }
         }
+        catch {
+            print(error)
+        }
+        
     }
     
     
     //add PublicKey delegate
     @IBAction func addPublicKeyDelegateButtonAction() {
-        let (signData, r, s, v) = self.wallet.getPublicKeySignature()
-        print(String(data: signData!, encoding: .utf8))
         
-        self.delegator.addPublicKeyDelegated(signData: signData!, r: r, s: s, v: v) { (type, txId, error) in
+        do {
+            let (signData, r, s, v) = try self.wallet.getPublicKeySignature()
+            print(String(data: signData!, encoding: .utf8))
             
-            if error != nil {
-                return
-            }
-            
-            self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
+            self.delegator.addPublicKeyDelegated(signData: signData!, r: r, s: s, v: v) { (type, txId, error) in
+                
                 if error != nil {
                     return
                 }
                 
-                if receipt == nil {
-                    self.wallet.transactionReceipt(type: type!, txId: txId!, complection: nil)
+                self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
+                    if error != nil {
+                        return
+                    }
                     
-                    return
-                }
-                
-                print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
-                
-                if receipt!.status == .success {
-                    
-                    DispatchQueue.main.async {
-                        let alert = UIAlertController.init(title: "addPublicKeyDelegate", message: receipt!.transactionHash, preferredStyle: .alert)
-                        let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                    if receipt == nil {
+                        self.wallet.transactionReceipt(type: type!, txId: txId!, complection: nil)
                         
-                        alert.addAction(action)
-                        self.present(alert, animated: true, completion: nil)
+                        return
+                    }
+                    
+                    print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
+                    
+                    if receipt!.status == .success {
+                        
+                        DispatchQueue.main.async {
+                            let alert = UIAlertController.init(title: "addPublicKeyDelegate", message: receipt!.transactionHash, preferredStyle: .alert)
+                            let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                            
+                            alert.addAction(action)
+                            self.present(alert, animated: true, completion: nil)
+                        }
                     }
                 }
             }
         }
+        catch {
+            print(error)
+        }
+        
     }
     
     
@@ -205,144 +218,164 @@ class ViewController: UIViewController {
         
         let address = self.serviceKey.address
         
-        let (addr, signData, servieId, r, s, v) = self.wallet.getSignServiceId(serviceID: "5933e64b-cb34-11ea-9e0f-020c6496fbdc", serviceAddress: address!)
-        
-        DispatchQueue.main.async {
-            self.signatureLabel.text = String(data: signData!, encoding: .utf8)
-        }
-        
-        
-        self.delegator.addKeyDelegated(address: addr, signData: signData!, serviceId: servieId, r: r, s: s, v: v) { (type, txId, error) in 
-            if error != nil {
-                return
+        do {
+            let (addr, signData, servieId, r, s, v) = try self.wallet.getSignServiceId(serviceID: "5933e64b-cb34-11ea-9e0f-020c6496fbdc", serviceAddress: address!)
+            
+            DispatchQueue.main.async {
+                self.signatureLabel.text = String(data: signData!, encoding: .utf8)
             }
             
-            self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
+            
+            self.delegator.addKeyDelegated(address: addr, signData: signData!, serviceId: servieId, r: r, s: s, v: v) { (type, txId, error) in
                 if error != nil {
                     return
                 }
                 
-                if receipt == nil {
-                    self.wallet.transactionReceipt(type: type!, txId: txId!, complection: nil)
+                self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
+                    if error != nil {
+                        return
+                    }
                     
-                    return
-                }
-                
-                print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
-                
-                var title = ""
-                if receipt!.status == .success {
-                    title = "성공"
-                }
-                else {
-                    title = "실패"
-                }
-                
-                DispatchQueue.main.async {
-                    let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
-                    let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                    if receipt == nil {
+                        self.wallet.transactionReceipt(type: type!, txId: txId!, complection: nil)
+                        
+                        return
+                    }
                     
-                    alert.addAction(action)
-                    self.present(alert, animated: true, completion: nil)
+                    print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
+                    
+                    var title = ""
+                    if receipt!.status == .success {
+                        title = "성공"
+                    }
+                    else {
+                        title = "실패"
+                    }
+                    
+                    DispatchQueue.main.async {
+                        let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
+                        let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                        
+                        alert.addAction(action)
+                        self.present(alert, animated: true, completion: nil)
+                    }
                 }
             }
+        }
+        catch {
+            print(error)
         }
     }
     
     
     @IBAction func removeKeyButtonAction() {
         if self.wallet != nil {
-            let (_, r, s, v) = self.wallet!.getRemoveKeySign()
             
-            self.delegator?.removeKeyDelegated(r: r, s: s, v: v, complection: { (type, txId, error) in
-                if error != nil {
-                    return
-                }
+            do {
+                let (_, r, s, v) = try self.wallet!.getRemoveKeySign()
                 
-                self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
-                    
-                    var title = ""
-                    if receipt!.status == .success {
-                        title = "RemoveKey:"  + "성공"
-                    }
-                    else {
-                        title = "RemoveKey:"  + "실패"
+                self.delegator?.removeKeyDelegated(r: r, s: s, v: v, complection: { (type, txId, error) in
+                    if error != nil {
+                        return
                     }
                     
-                    DispatchQueue.main.async {
-                        let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
-                        let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                    self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
                         
-                        alert.addAction(action)
-                        self.present(alert, animated: true, completion: nil)
-                    }
+                        var title = ""
+                        if receipt!.status == .success {
+                            title = "RemoveKey:"  + "성공"
+                        }
+                        else {
+                            title = "RemoveKey:"  + "실패"
+                        }
+                        
+                        DispatchQueue.main.async {
+                            let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
+                            let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                            
+                            alert.addAction(action)
+                            self.present(alert, animated: true, completion: nil)
+                        }
+                    })
                 })
-            })
+            }
+            catch {
+                print(error)
+            }
         }
     }
     
     @IBAction func removePublicKeyButtonAction() {
         if self.wallet != nil {
-            let (_, r, s, v) = self.wallet!.getRemovePublicKeySign()
             
-            self.delegator?.removePublicKeyDelegated(r: r, s: s, v: v, complection: { (type, txId, error) in
-                if error != nil {
-                    return
-                }
+            do {
+                let (_, r, s, v) = try self.wallet!.getRemovePublicKeySign()
                 
-                self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
-                    
-                    var title = ""
-                    if receipt!.status == .success {
-                        title = "RemovePublicKey:"  + "성공"
-                    }
-                    else {
-                        title = "RemovePublicKey:"  + "실패"
+                self.delegator?.removePublicKeyDelegated(r: r, s: s, v: v, complection: { (type, txId, error) in
+                    if error != nil {
+                        return
                     }
                     
-                    DispatchQueue.main.async {
-                        let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
-                        let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                    self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
                         
-                        alert.addAction(action)
-                        self.present(alert, animated: true, completion: nil)
-                    }
+                        var title = ""
+                        if receipt!.status == .success {
+                            title = "RemovePublicKey:"  + "성공"
+                        }
+                        else {
+                            title = "RemovePublicKey:"  + "실패"
+                        }
+                        
+                        DispatchQueue.main.async {
+                            let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
+                            let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                            
+                            alert.addAction(action)
+                            self.present(alert, animated: true, completion: nil)
+                        }
+                    })
                 })
-            })
+            }
+            catch {
+                print(error)
+            }
         }
     }
     
     @IBAction func removeAssociatedAddressButtonAction() {
         if self.wallet != nil {
-            let (_, r, s, v) = self.wallet!.getRemoveAssociatedAddressSign()
-            
-            self.delegator?.removeAssociatedAddressDelegated(r: r, s: s, v: v, complection: { (type, txId, error) in
-                if error != nil {
-                    return
-                }
+            do {
+                let (_, r, s, v) = try self.wallet!.getRemoveAssociatedAddressSign()
                 
-                self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
-                    
-                    var title = ""
-                    if receipt!.status == .success {
-                        title = "RemoveAssociatedKey:"  + "성공"
-                    }
-                    else {
-                        title = "RemoveAssociatedKey:"  + "실패"
+                self.delegator?.removeAssociatedAddressDelegated(r: r, s: s, v: v, complection: { (type, txId, error) in
+                    if error != nil {
+                        return
                     }
                     
-                    DispatchQueue.main.async {
-                        let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
-                        let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                    self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
                         
-                        alert.addAction(action)
-                        self.present(alert, animated: true, completion: nil)
-                    }
+                        var title = ""
+                        if receipt!.status == .success {
+                            title = "RemoveAssociatedKey:"  + "성공"
+                        }
+                        else {
+                            title = "RemoveAssociatedKey:"  + "실패"
+                        }
+                        
+                        DispatchQueue.main.async {
+                            let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
+                            let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                            
+                            alert.addAction(action)
+                            self.present(alert, animated: true, completion: nil)
+                        }
+                    })
                 })
-            })
+            }
+            catch {
+                print(error)
+            }
         }
     }
-    
-    
 }
 

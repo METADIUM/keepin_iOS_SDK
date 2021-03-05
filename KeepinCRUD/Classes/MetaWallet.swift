@@ -24,6 +24,14 @@ public enum MetaTransactionType {
 
 public class MetaWallet: NSObject, MetaDelegatorMessenger {
     
+//    public enum Error: Swift.Error {
+//        case noneRegistryAddress
+//    }
+    
+    public enum WalletError: Error {
+        case noneRegistryAddress(String)
+    }
+    
     var account: EthereumAccount!
     
     var delegator: MetaDelegator!
@@ -185,11 +193,15 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
     /**
      * create_identity delegate sign
      */
-    public func getCreateKeySignature() -> (Data?, String, String, String) {
+    public func getCreateKeySignature() throws -> (Data?, String, String, String) {
         
-        let resolvers = self.delegator.registryAddress.resolvers
-        let providers = self.delegator.registryAddress.providers
-        let identityRegistry = self.delegator.registryAddress.identityRegistry?.noHexPrefix
+        if self.delegator.registryAddress == nil {
+            throw WalletError.noneRegistryAddress("noneRegistryAddress")
+        }
+        
+        let resolvers = self.delegator.registryAddress!.resolvers
+        let providers = self.delegator.registryAddress!.providers
+        let identityRegistry = self.delegator.registryAddress!.identityRegistry?.noHexPrefix
         
         let addr = self.delegator.keyStore!.addresses?.first?.address
         
@@ -257,8 +269,13 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
      * add_public_key_delegated sign
      */
 
-    public func getPublicKeySignature() -> (Data?, String, String, String) {
-        let publicKeyResolverAddress = self.delegator.registryAddress.publicKey
+    public func getPublicKeySignature() throws -> (Data?, String, String, String) {
+        
+        if self.delegator.registryAddress == nil {
+            throw WalletError.noneRegistryAddress("noneRegistryAddress")
+        }
+        
+        let publicKeyResolverAddress = self.delegator.registryAddress!.publicKey
 
         let temp = Data([0x19, 0x00])
 
@@ -303,9 +320,13 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
      * add_key_delegated sign
      */
     
-    public func getSignServiceId(serviceID: String, serviceAddress: String) -> (String, Data?, String, String, String, String) {
+    public func getSignServiceId(serviceID: String, serviceAddress: String) throws -> (String, Data?, String, String, String, String) {
         
-        let resolver = self.delegator.registryAddress.serviceKey
+        if self.delegator.registryAddress == nil {
+            throw WalletError.noneRegistryAddress("noneRegistryAddress")
+        }
+        
+        let resolver = self.delegator.registryAddress!.serviceKey
        
         let temp = Data([0x19, 0x00])
         let resolverData = Data.fromHex(resolver!)
@@ -346,8 +367,13 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
     }
     
     
-    public func getRemoveKeySign() -> (Data?, String, String, String) {
-        let serviceKey = self.delegator.registryAddress.serviceKey
+    public func getRemoveKeySign() throws -> (Data?, String, String, String) {
+        
+        if self.delegator.registryAddress == nil {
+            throw WalletError.noneRegistryAddress("noneRegistryAddress")
+        }
+        
+        let serviceKey = self.delegator.registryAddress!.serviceKey
        
         let temp = Data([0x19, 0x00])
         let serviceKeyData = Data.fromHex(serviceKey!)
@@ -378,8 +404,13 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
     }
     
     
-    public func getRemovePublicKeySign() -> (Data?, String, String, String) {
-        let publicKey = self.delegator.registryAddress.publicKey
+    public func getRemovePublicKeySign() throws -> (Data?, String, String, String) {
+        
+        if self.delegator.registryAddress == nil {
+            throw WalletError.noneRegistryAddress("noneRegistryAddress")
+        }
+        
+        let publicKey = self.delegator.registryAddress!.publicKey
        
         let temp = Data([0x19, 0x00])
         let msg = KDefine.KRemove_PubliKey.data(using: .utf8)
@@ -413,8 +444,13 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
     }
     
     
-    public func getRemoveAssociatedAddressSign() -> (Data?, String, String, String) {
-        let identityRegistry = self.delegator.registryAddress.identityRegistry
+    public func getRemoveAssociatedAddressSign() throws -> (Data?, String, String, String) {
+        
+        if self.delegator.registryAddress == nil {
+            throw WalletError.noneRegistryAddress("noneRegistryAddress")
+        }
+        
+        let identityRegistry = self.delegator.registryAddress!.identityRegistry
        
         let temp = Data([0x19, 0x00])
         let msg = KDefine.kRemove_Address_MyIdentity.data(using: .utf8)

@@ -98,94 +98,116 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func removeKeyButtonAction() {
         if self.wallet != nil {
-            let (_, r, s, v) = self.wallet!.getRemoveKeySign()
             
-            self.delegator?.removeKeyDelegated(r: r, s: s, v: v, complection: { (type, txId, error) in
-                if error != nil {
-                    return
-                }
+            do {
+                let (_, r, s, v) = try self.wallet!.getRemoveKeySign()
                 
-                self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
-                    
-                    var title = ""
-                    if receipt!.status == .success {
-                        title = "RemoveKey:"  + "성공"
-                    }
-                    else {
-                        title = "RemoveKey:"  + "실패"
+                self.delegator?.removeKeyDelegated(r: r, s: s, v: v, complection: { (type, txId, error) in
+                    if error != nil {
+                        return
                     }
                     
-                    DispatchQueue.main.async {
-                        let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
-                        let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                    self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
                         
-                        alert.addAction(action)
-                        self.present(alert, animated: true, completion: nil)
-                    }
+                        var title = ""
+                        if receipt!.status == .success {
+                            title = "RemoveKey:"  + "성공"
+                        }
+                        else {
+                            title = "RemoveKey:"  + "실패"
+                        }
+                        
+                        DispatchQueue.main.async {
+                            let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
+                            let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                            
+                            alert.addAction(action)
+                            self.present(alert, animated: true, completion: nil)
+                        }
+                    })
                 })
-            })
+            } catch {
+                print(error.localizedDescription)
+            }
+            
+            
         }
     }
     
     @IBAction func removePublicKeyButtonAction() {
         if self.wallet != nil {
-            let (_, r, s, v) = self.wallet!.getRemovePublicKeySign()
             
-            self.delegator?.removePublicKeyDelegated(r: r, s: s, v: v, complection: { (type, txId, error) in
-                if error != nil {
-                    return
-                }
+            do {
+                let (_, r, s, v) = try self.wallet!.getRemovePublicKeySign()
                 
-                self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
-                    
-                    var title = ""
-                    if receipt!.status == .success {
-                        title = "RemovePublicKey:"  + "성공"
-                    }
-                    else {
-                        title = "RemovePublicKey:"  + "실패"
+                self.delegator?.removePublicKeyDelegated(r: r, s: s, v: v, complection: { (type, txId, error) in
+                    if error != nil {
+                        return
                     }
                     
-                    DispatchQueue.main.async {
-                        let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
-                        let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                    self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
                         
-                        alert.addAction(action)
-                        self.present(alert, animated: true, completion: nil)
-                    }
+                        var title = ""
+                        if receipt!.status == .success {
+                            title = "RemovePublicKey:"  + "성공"
+                        }
+                        else {
+                            title = "RemovePublicKey:"  + "실패"
+                        }
+                        
+                        DispatchQueue.main.async {
+                            let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
+                            let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                            
+                            alert.addAction(action)
+                            self.present(alert, animated: true, completion: nil)
+                        }
+                    })
                 })
-            })
+            }
+            catch {
+                print(error.localizedDescription)
+            }
+            
+            
         }
     }
     
     @IBAction func removeAssociatedAddressButtonAction() {
         if self.wallet != nil {
-            let (_, r, s, v) = self.wallet!.getRemoveAssociatedAddressSign()
             
-            self.delegator?.removeAssociatedAddressDelegated(r: r, s: s, v: v, complection: { (type, txId, error) in
-                if error != nil {
-                    return
-                }
+            do {
+                let (_, r, s, v) = try self.wallet!.getRemoveAssociatedAddressSign()
                 
-                self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
-                    
-                    var title = ""
-                    if receipt!.status == .success {
-                        title = "RemoveAssociatedKey:"  + "성공"
-                    }
-                    else {
-                        title = "RemoveAssociatedKey:"  + "실패"
+                self.delegator?.removeAssociatedAddressDelegated(r: r, s: s, v: v, complection: { (type, txId, error) in
+                    if error != nil {
+                        return
                     }
                     
-                    DispatchQueue.main.async {
-                        let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
-                        let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                    self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
                         
-                        alert.addAction(action)
-                        self.present(alert, animated: true, completion: nil)
-                    }
+                        var title = ""
+                        if receipt!.status == .success {
+                            title = "RemoveAssociatedKey:"  + "성공"
+                        }
+                        else {
+                            title = "RemoveAssociatedKey:"  + "실패"
+                        }
+                        
+                        DispatchQueue.main.async {
+                            let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
+                            let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                            
+                            alert.addAction(action)
+                            self.present(alert, animated: true, completion: nil)
+                        }
+                    })
                 })
-            })
+            }
+            catch {
+                print(error.localizedDescription)
+            }
+            
         }
     }
     

@@ -22,7 +22,7 @@ protocol MetaDelegatorMessenger {
 
 public class MetaDelegator: NSObject {
     
-    var registryAddress: RegistryAddress!
+    var registryAddress: RegistryAddress?
     
     var ethereumClient: EthereumClient!
     var delegatorUrl: URL!
@@ -57,7 +57,7 @@ public class MetaDelegator: NSObject {
     
     
     
-    private func getAllServiceAddress() {
+    public func getAllServiceAddress() {
         if self.registryAddress == nil {
             
             let group = DispatchGroup()
@@ -156,8 +156,8 @@ public class MetaDelegator: NSObject {
         
         self.getAllServiceAddress()
         
-        let resolvers = self.registryAddress.resolvers
-        let providers = self.registryAddress.providers
+        let resolvers = self.registryAddress!.resolvers
+        let providers = self.registryAddress!.providers
         let addr = self.keyStore?.addresses?.first?.address
 
         let params = [["recovery_address" : addr!, "associated_address": addr!, "providers":providers!, "resolvers": resolvers!, "v": v, "r": r, "s": s, "timestamp": self.timeStamp!]]
@@ -190,7 +190,7 @@ public class MetaDelegator: NSObject {
         
         self.getAllServiceAddress()
         
-        let resolver_publicKey = self.registryAddress.publicKey
+        let resolver_publicKey = self.registryAddress!.publicKey
         let addr = self.keyStore?.addresses?.first?.address
         let account = try? EthereumAccount.init(keyStore: self.keyStore)
         let publicKey = account!.publicKey
@@ -225,7 +225,7 @@ public class MetaDelegator: NSObject {
         
         self.getAllServiceAddress()
         
-        let resolver = self.registryAddress.serviceKey
+        let resolver = self.registryAddress!.serviceKey
         let addr = self.keyStore.addresses?.first?.address
         
         let params = [["resolver_address" : resolver!, "associated_address": addr!, "key": address, "symbol": serviceId, "v": v, "r": r, "s": s, "timestamp": self.timeStamp!]]
@@ -248,7 +248,7 @@ public class MetaDelegator: NSObject {
     public func removeKeyDelegated(r: String, s: String, v: String, complection: @escaping(MetaTransactionType?, String?, Error?) -> Void) {
         self.getAllServiceAddress()
         
-        let resolver = self.registryAddress.serviceKey
+        let resolver = self.registryAddress!.serviceKey
         let addr = self.keyStore.addresses?.first?.address
         
         let params = [["resolver_address" : resolver!, "associated_address": addr!, "v": v, "r": r, "s": s, "timestamp": self.timeStamp!]]
@@ -270,7 +270,7 @@ public class MetaDelegator: NSObject {
     public func removePublicKeyDelegated(r: String, s: String, v: String, complection: @escaping(MetaTransactionType?, String?, Error?) -> Void) {
         self.getAllServiceAddress()
         
-        let resolver = self.registryAddress.publicKey
+        let resolver = self.registryAddress!.publicKey
         let addr = self.keyStore.addresses?.first?.address
         
         let params = [["resolver_address" : resolver!, "associated_address": addr!, "v": v, "r": r, "s": s, "timestamp": self.timeStamp!]]
