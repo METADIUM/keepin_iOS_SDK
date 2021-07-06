@@ -22,27 +22,36 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     var wallet: MetaWallet?
     var delegator: MetaDelegator?
 
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.title = "FirstViewController"
         self.signTextField.text = "Test Data"
+        
+        
+        let btn = UIButton(type: .system)
+        btn.addTarget(self, action: #selector(self.createKeyButtonAction), for: .touchUpInside)
+        btn.setTitle("키생성", for: .normal)
+        
+        let barItem = UIBarButtonItem.init(customView: btn)
+        self.navigationItem.rightBarButtonItem = barItem
     }
 
 
-    @IBAction func createKeyButtonAction() {
+    
+    
+    @objc func createKeyButtonAction() {
         let vc = ViewController.init(nibName: "ViewController", bundle: nil)
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
     
+    
     @IBAction func loadKeyButtonAction() {
         
         self.delegator = MetaDelegator.init()
-        
-        self.wallet = MetaWallet.init(delegator: self.delegator!, nemonic: "found dilemma able enemy wagon review bronze wall attend cannon patient script", did: "did:meta:testnet:0x00000000000000000000000000002991")
-        
+        self.wallet = MetaWallet.init(delegator: self.delegator!, privateKey: "0xb7fddf3e1645b2f2ef8e1f427ec2ae76cc6989fd33999f065bc48cb39d6c2336", did: "did:meta:testnet:0000000000000000000000000000000000000000000000000000000000002f4c")
+
         DispatchQueue.main.async {
             self.didLabel.text =  self.wallet!.getDid()
         }
@@ -54,8 +63,25 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             print("privateKey: \(key?.privateKey! ?? "")")
             print("publicKey: \(key?.publicKey! ?? "")")
             print("address: \(key?.address! ?? "")")
-            print("nemonic: \(key?.nemonic! ?? "")")
         }
+    }
+    
+    
+    @IBAction func didDocumentButtonAction() {
+//        let did = "did:meta:0000000000000000000000000000000000000000000000000000000000004f82"
+        
+        let did = self.wallet?.getDid()
+        
+        self.wallet?.reqDiDDocument(did: did!, complection: { (document, error) in
+            if error != nil {
+                return
+            }
+            
+            let document = document
+            
+            print(document)
+        })
+        
     }
     
     
@@ -79,7 +105,8 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             print("r: \(r ?? ""), s: \(s ?? ""), v: \(v ?? "")")
             
             DispatchQueue.main.async {
-                self.signatureLabel.text = String(data: signature!, encoding: .utf8)?.withHexPrefix
+                
+                MKeepinUtil.showAlert(message: String(data: signature!, encoding: .utf8)?.withHexPrefix, controller: self, onComplection: nil)
             }
             
             return

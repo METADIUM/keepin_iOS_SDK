@@ -14,9 +14,6 @@ class ViewController: UIViewController {
     
     var delegator: MetaDelegator!
     var wallet: MetaWallet!
-    
-    var store: BIP32Keystore!
-    
     var serviceKey: MetadiumKey!
     
     
@@ -28,9 +25,6 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var didLabel: UILabel!
-    @IBOutlet weak var kidLabel: UILabel!
-    
-    @IBOutlet weak var signatureLabel: UILabel!
     
     
     var did: String?
@@ -39,27 +33,14 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         self.title = "Key Create & Delegate"
-
-        
-        UIFont.familyNames.sorted().forEach{ familyName in
-                    print("*** \(familyName) ***")
-                    UIFont.fontNames(forFamilyName: familyName).forEach { fontName in
-                        print("\(fontName)")
-                    }
-                    print("---------------------")
-                }
-        
         
         //디폴트는 https://testdelegator.metadium.com, https://api.metadium.com/dev, did:meta:testnet:
         self.delegator = MetaDelegator.init()
         
-        
         //delegate url, node url, didPrefix를 직접 설정할 때
         //self.delegator = MetaDelegator.init(delegatorUrl: "https://delegator.metadium.com", nodeUrl: "https://api.metadium.com/prod", didPrefix: "did:meta:testnet:")
                 
-        self.wallet = MetaWallet.init(delegator: delegator)
-        
-        self.addPublicKeyButton.isEnabled = false
+        self.wallet = MetaWallet.init(delegator: self.delegator)
         self.addServiceKeyButton.isEnabled = false
     }
 
@@ -75,12 +56,10 @@ class ViewController: UIViewController {
         //로컬에 키가 없을 경우 생성
         let key = self.wallet.createKey()
         
-        print("privateKey: \(key?.privateKey ?? "")\npublicKey: \(key?.publicKey ?? "")\naddress: \(key?.address ?? "")\nnemonic: \(key?.nemonic ?? "")")
+        print("privateKey: \(key?.privateKey ?? "")\npublicKey: \(key?.publicKey ?? "")\naddress: \(key?.address ?? "")")
         
         //로컬에 프라이빗 키가 이미 저장이 되어 있을 때
         //self.wallet.assignPrivateKey(privateKey: (key?.privateKey)!)
-        
-        self.addPublicKeyButton.isEnabled = true
         
         DispatchQueue.main.async {
             self.addressLabel.text = self.delegator.keyStore.addresses?.first?.address
@@ -98,30 +77,39 @@ class ViewController: UIViewController {
                     return
                 }
                 
-                self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
+                DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
                     
-                    if error != nil {
-                        return
-                    }
-                    
-                    if receipt == nil {
-                        self.wallet.transactionReceipt(type: type!, txId: txId!, complection: nil)
+                    self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
                         
-                        return
-                    }
-                    
-                    print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
-                    
-                    
-                    self.did = self.wallet.getDid()
-                    print(self.did)
-                    
-                    let sign = String(data: signData!, encoding: .utf8)?.withHexPrefix
-                    
-                    DispatchQueue.main.async {
-                        self.didLabel.text = self.did
-                        self.signatureLabel.text = sign
-                        self.kidLabel.text = self.wallet.getKid()
+                        if error != nil {
+                            return
+                        }
+                        
+                        if receipt == nil {
+                            self.wallet.transactionReceipt(type: type!, txId: txId!, complection: nil)
+                            
+                            return
+                        }
+                        
+                        print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
+                        
+                        
+                        self.did = self.wallet.getDid()
+                        print(self.did)
+                        
+                        let jsonStr = self.wallet.toJson()
+                        print(jsonStr)
+                        
+                        let sign = String(data: signData!, encoding: .utf8)?.withHexPrefix
+                        
+                        DispatchQueue.main.async {
+                            self.didLabel.text = self.did
+                            MKeepinUtil.showAlert(message: sign, controller: self, onComplection: nil)
+                            
+                            print(self.wallet.getKid())
+                        }
+                        
+                        self.addPublicKeyDelegate()
                     }
                 }
             }
@@ -134,7 +122,7 @@ class ViewController: UIViewController {
     
     
     //add PublicKey delegate
-    @IBAction func addPublicKeyDelegateButtonAction() {
+    func addPublicKeyDelegate() {
         
         do {
             let (signData, r, s, v) = try self.wallet.getPublicKeySignature()
@@ -146,27 +134,30 @@ class ViewController: UIViewController {
                     return
                 }
                 
-                self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
-                    if error != nil {
-                        return
-                    }
+                DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
                     
-                    if receipt == nil {
-                        self.wallet.transactionReceipt(type: type!, txId: txId!, complection: nil)
+                    self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
+                        if error != nil {
+                            return
+                        }
                         
-                        return
-                    }
-                    
-                    print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
-                    
-                    if receipt!.status == .success {
-                        
-                        DispatchQueue.main.async {
-                            let alert = UIAlertController.init(title: "addPublicKeyDelegate", message: receipt!.transactionHash, preferredStyle: .alert)
-                            let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                        if receipt == nil {
+                            self.wallet.transactionReceipt(type: type!, txId: txId!, complection: nil)
                             
-                            alert.addAction(action)
-                            self.present(alert, animated: true, completion: nil)
+                            return
+                        }
+                        
+                        print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
+                        
+                        if receipt!.status == .success {
+                            
+                            DispatchQueue.main.async {
+                                let alert = UIAlertController.init(title: "addPublicKeyDelegate", message: receipt!.transactionHash, preferredStyle: .alert)
+                                let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                                
+                                alert.addAction(action)
+                                self.present(alert, animated: true, completion: nil)
+                            }
                         }
                     }
                 }
@@ -222,7 +213,7 @@ class ViewController: UIViewController {
             let (addr, signData, servieId, r, s, v) = try self.wallet.getSignServiceId(serviceID: "5933e64b-cb34-11ea-9e0f-020c6496fbdc", serviceAddress: address!)
             
             DispatchQueue.main.async {
-                self.signatureLabel.text = String(data: signData!, encoding: .utf8)
+                print(String(data: signData!, encoding: .utf8))
             }
             
             
@@ -231,35 +222,38 @@ class ViewController: UIViewController {
                     return
                 }
                 
-                self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
-                    if error != nil {
-                        return
-                    }
-                    
-                    if receipt == nil {
-                        self.wallet.transactionReceipt(type: type!, txId: txId!, complection: nil)
+                DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+                    self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
+                        if error != nil {
+                            return
+                        }
                         
-                        return
-                    }
-                    
-                    print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
-                    
-                    var title = ""
-                    if receipt!.status == .success {
-                        title = "성공"
-                    }
-                    else {
-                        title = "실패"
-                    }
-                    
-                    DispatchQueue.main.async {
-                        let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
-                        let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                        if receipt == nil {
+                            self.wallet.transactionReceipt(type: type!, txId: txId!, complection: nil)
+                            
+                            return
+                        }
                         
-                        alert.addAction(action)
-                        self.present(alert, animated: true, completion: nil)
+                        print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
+                        
+                        var title = ""
+                        if receipt!.status == .success {
+                            title = "성공"
+                        }
+                        else {
+                            title = "실패"
+                        }
+                        
+                        DispatchQueue.main.async {
+                            let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
+                            let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                            
+                            alert.addAction(action)
+                            self.present(alert, animated: true, completion: nil)
+                        }
                     }
                 }
+                
             }
         }
         catch {
@@ -279,24 +273,30 @@ class ViewController: UIViewController {
                         return
                     }
                     
-                    self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
-                        
-                        var title = ""
-                        if receipt!.status == .success {
-                            title = "RemoveKey:"  + "성공"
-                        }
-                        else {
-                            title = "RemoveKey:"  + "실패"
-                        }
-                        
-                        DispatchQueue.main.async {
-                            let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
-                            let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                    DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+                        self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
                             
-                            alert.addAction(action)
-                            self.present(alert, animated: true, completion: nil)
-                        }
-                    })
+                            if error != nil {
+                                return
+                            }
+                            
+                            var title = ""
+                            if receipt!.status == .success {
+                                title = "RemoveKey:"  + "성공"
+                            }
+                            else {
+                                title = "RemoveKey:"  + "실패"
+                            }
+                            
+                            DispatchQueue.main.async {
+                                let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
+                                let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                                
+                                alert.addAction(action)
+                                self.present(alert, animated: true, completion: nil)
+                            }
+                        })
+                    }
                 })
             }
             catch {
@@ -316,24 +316,27 @@ class ViewController: UIViewController {
                         return
                     }
                     
-                    self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
-                        
-                        var title = ""
-                        if receipt!.status == .success {
-                            title = "RemovePublicKey:"  + "성공"
-                        }
-                        else {
-                            title = "RemovePublicKey:"  + "실패"
-                        }
-                        
-                        DispatchQueue.main.async {
-                            let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
-                            let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                    DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+                        self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
                             
-                            alert.addAction(action)
-                            self.present(alert, animated: true, completion: nil)
-                        }
-                    })
+                            var title = ""
+                            if receipt!.status == .success {
+                                title = "RemovePublicKey:"  + "성공"
+                            }
+                            else {
+                                title = "RemovePublicKey:"  + "실패"
+                            }
+                            
+                            DispatchQueue.main.async {
+                                let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
+                                let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                                
+                                alert.addAction(action)
+                                self.present(alert, animated: true, completion: nil)
+                            }
+                        })
+                    }
+                    
                 })
             }
             catch {
@@ -352,24 +355,28 @@ class ViewController: UIViewController {
                         return
                     }
                     
-                    self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
+                    DispatchQueue.global().asyncAfter(deadline: .now() + 0.2) {
                         
-                        var title = ""
-                        if receipt!.status == .success {
-                            title = "RemoveAssociatedKey:"  + "성공"
-                        }
-                        else {
-                            title = "RemoveAssociatedKey:"  + "실패"
-                        }
-                        
-                        DispatchQueue.main.async {
-                            let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
-                            let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                        self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
                             
-                            alert.addAction(action)
-                            self.present(alert, animated: true, completion: nil)
-                        }
-                    })
+                            var title = ""
+                            if receipt!.status == .success {
+                                title = "RemoveAssociatedKey:"  + "성공"
+                            }
+                            else {
+                                title = "RemoveAssociatedKey:"  + "실패"
+                            }
+                            
+                            DispatchQueue.main.async {
+                                let alert = UIAlertController.init(title: title, message: receipt!.transactionHash, preferredStyle: .alert)
+                                let action = UIAlertAction.init(title: "확인", style: .default, handler: nil)
+                                
+                                alert.addAction(action)
+                                self.present(alert, animated: true, completion: nil)
+                            }
+                        })
+                    }
+                    
                 })
             }
             catch {

@@ -76,8 +76,7 @@ public class EthereumRPC {
                     return completion(JSONRPCError.responseError, nil)
                 } else if let response = response as? HTTPURLResponse, response.statusCode < 200 || response.statusCode > 299 {
                     return completion(JSONRPCError.responseError, nil)
-                }
-                else {
+                } else {
                     return completion(JSONRPCError.noResult, nil)
                 }
             }

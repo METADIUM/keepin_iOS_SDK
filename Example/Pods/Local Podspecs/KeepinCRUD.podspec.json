@@ -1,27 +1,38 @@
 {
   "name": "KeepinCRUD",
-  "version": "0.1.0",
-  "summary": "A short description of KeepinCRUD.",
+  "version": "0.1.9",
+  "swift_versions": "4.2",
+  "summary": "Keepin Key CRUD",
   "description": "TODO: Add long description of the pod here.",
-  "homepage": "https://github.com/jinsikhan/KeepinCRUD",
+  "homepage": "https://github.com/METADIUM/keepin_iOS_SDK",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
   },
   "authors": {
-    "jinsikhan": "jshan@coinplug.com"
+    "Benjamin Han": "jshan@coinplug.com"
   },
   "source": {
-    "git": "https://github.com/jinsikhan/KeepinCRUD.git",
-    "tag": "0.1.0"
+    "git": "https://github.com/METADIUM/keepin_iOS_SDK",
+    "tag": "0.1.9"
   },
   "platforms": {
-    "ios": "11.3"
+    "ios": "12.0"
   },
   "source_files": "KeepinCRUD/Classes/**/*",
   "dependencies": {
     "web3iOS": [
-      "~> 1.1.0"
+      "~> 1.1.9"
+    ],
+    "JOSESwift": [
+
+    ],
+    "JWTsSwift": [
+
+    ],
+    "VerifiableSwift": [
+
     ]
-  }
+  },
+  "swift_version": "4.2"
 }

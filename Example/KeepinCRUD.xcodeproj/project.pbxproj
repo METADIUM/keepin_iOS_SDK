@@ -7,16 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		326C425007219A6634FCBB2C /* Pods_KeepinCRUD_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66713C05C33DB258758A19A4 /* Pods_KeepinCRUD_Tests.framework */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
-		90580AA56AE0B082007A587F /* Pods_KeepinCRUD_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB665F837DE3CB5808F2E450 /* Pods_KeepinCRUD_Tests.framework */; };
 		E30C087C25AD7FD40032C89E /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30C087A25AD7FD40032C89E /* FirstViewController.swift */; };
 		E30C088325AD80020032C89E /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E30C088225AD80020032C89E /* ViewController.xib */; };
-		F674A1F099BB898AE7C3DA52 /* Pods_KeepinCRUD_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9929DB4576F76C6065661C92 /* Pods_KeepinCRUD_Example.framework */; };
+		E3C4D45A268D5D8000456F6C /* MKeepinUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C4D459268D5D8000456F6C /* MKeepinUtil.swift */; };
+		EC2F8AB77B449921D81CDA9F /* Pods_KeepinCRUD_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D76DAB1B4F968C45D845E06 /* Pods_KeepinCRUD_Example.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,8 +31,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		4064CAA28A19DFA9B1A63693 /* Pods-KeepinCRUD_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KeepinCRUD_Tests.debug.xcconfig"; path = "Target Support Files/Pods-KeepinCRUD_Tests/Pods-KeepinCRUD_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		41D7A3CF17DA5426B9723329 /* Pods-KeepinCRUD_Example-KeepinCRUD_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KeepinCRUD_Example-KeepinCRUD_Tests.debug.xcconfig"; path = "Target Support Files/Pods-KeepinCRUD_Example-KeepinCRUD_Tests/Pods-KeepinCRUD_Example-KeepinCRUD_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		12A45C80F9C743DA6E502DA4 /* Pods-KeepinCRUD_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KeepinCRUD_Example.debug.xcconfig"; path = "Target Support Files/Pods-KeepinCRUD_Example/Pods-KeepinCRUD_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* KeepinCRUD_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KeepinCRUD_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -42,17 +42,17 @@
 		607FACE51AFB9204008FA782 /* KeepinCRUD_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KeepinCRUD_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
-		71F9EC64A20659487B6CE1DE /* Pods-KeepinCRUD_Example-KeepinCRUD_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KeepinCRUD_Example-KeepinCRUD_Tests.release.xcconfig"; path = "Target Support Files/Pods-KeepinCRUD_Example-KeepinCRUD_Tests/Pods-KeepinCRUD_Example-KeepinCRUD_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		66713C05C33DB258758A19A4 /* Pods_KeepinCRUD_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KeepinCRUD_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		69CB9057F46D5B34CFF4DBB2 /* Pods-KeepinCRUD_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KeepinCRUD_Tests.debug.xcconfig"; path = "Target Support Files/Pods-KeepinCRUD_Tests/Pods-KeepinCRUD_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		8D76DAB1B4F968C45D845E06 /* Pods_KeepinCRUD_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KeepinCRUD_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92B0D8039C698C944A72D2CE /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		9929DB4576F76C6065661C92 /* Pods_KeepinCRUD_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KeepinCRUD_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A62A057AFE860DA065873173 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		AE177264ABB985D8207E2EAB /* Pods-KeepinCRUD_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KeepinCRUD_Example.debug.xcconfig"; path = "Target Support Files/Pods-KeepinCRUD_Example/Pods-KeepinCRUD_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		DB665F837DE3CB5808F2E450 /* Pods_KeepinCRUD_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KeepinCRUD_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B893FC3CFE64452FF2621E4F /* Pods-KeepinCRUD_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KeepinCRUD_Tests.release.xcconfig"; path = "Target Support Files/Pods-KeepinCRUD_Tests/Pods-KeepinCRUD_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		E0D52A2E95A7C2D277057D0C /* Pods-KeepinCRUD_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KeepinCRUD_Example.release.xcconfig"; path = "Target Support Files/Pods-KeepinCRUD_Example/Pods-KeepinCRUD_Example.release.xcconfig"; sourceTree = "<group>"; };
 		E30C087A25AD7FD40032C89E /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
 		E30C088225AD80020032C89E /* ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
-		E6011C8022C6C0A2370CEB57 /* Pods-KeepinCRUD_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KeepinCRUD_Tests.release.xcconfig"; path = "Target Support Files/Pods-KeepinCRUD_Tests/Pods-KeepinCRUD_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		E3C4D459268D5D8000456F6C /* MKeepinUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MKeepinUtil.swift; sourceTree = "<group>"; };
 		FBE4B4636422C038468DC7EA /* KeepinCRUD.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = KeepinCRUD.podspec; path = ../KeepinCRUD.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		FEE52145B791C7021DE50DC2 /* Pods-KeepinCRUD_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KeepinCRUD_Example.release.xcconfig"; path = "Target Support Files/Pods-KeepinCRUD_Example/Pods-KeepinCRUD_Example.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,7 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F674A1F099BB898AE7C3DA52 /* Pods_KeepinCRUD_Example.framework in Frameworks */,
+				EC2F8AB77B449921D81CDA9F /* Pods_KeepinCRUD_Example.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,22 +68,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				90580AA56AE0B082007A587F /* Pods_KeepinCRUD_Tests.framework in Frameworks */,
+				326C425007219A6634FCBB2C /* Pods_KeepinCRUD_Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		39E97CBD15BB0488863378F3 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				9929DB4576F76C6065661C92 /* Pods_KeepinCRUD_Example.framework */,
-				DB665F837DE3CB5808F2E450 /* Pods_KeepinCRUD_Tests.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
@@ -92,7 +83,7 @@
 				607FACE81AFB9204008FA782 /* Tests */,
 				607FACD11AFB9204008FA782 /* Products */,
 				6C144608872A1F5CFAF89459 /* Pods */,
-				39E97CBD15BB0488863378F3 /* Frameworks */,
+				E261BBC5BE4BA939143278E2 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -108,6 +99,7 @@
 		607FACD21AFB9204008FA782 /* Example for KeepinCRUD */ = {
 			isa = PBXGroup;
 			children = (
+				E3C4D459268D5D8000456F6C /* MKeepinUtil.swift */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				E30C088225AD80020032C89E /* ViewController.xib */,
@@ -159,14 +151,21 @@
 		6C144608872A1F5CFAF89459 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				AE177264ABB985D8207E2EAB /* Pods-KeepinCRUD_Example.debug.xcconfig */,
-				FEE52145B791C7021DE50DC2 /* Pods-KeepinCRUD_Example.release.xcconfig */,
-				4064CAA28A19DFA9B1A63693 /* Pods-KeepinCRUD_Tests.debug.xcconfig */,
-				E6011C8022C6C0A2370CEB57 /* Pods-KeepinCRUD_Tests.release.xcconfig */,
-				41D7A3CF17DA5426B9723329 /* Pods-KeepinCRUD_Example-KeepinCRUD_Tests.debug.xcconfig */,
-				71F9EC64A20659487B6CE1DE /* Pods-KeepinCRUD_Example-KeepinCRUD_Tests.release.xcconfig */,
+				12A45C80F9C743DA6E502DA4 /* Pods-KeepinCRUD_Example.debug.xcconfig */,
+				E0D52A2E95A7C2D277057D0C /* Pods-KeepinCRUD_Example.release.xcconfig */,
+				69CB9057F46D5B34CFF4DBB2 /* Pods-KeepinCRUD_Tests.debug.xcconfig */,
+				B893FC3CFE64452FF2621E4F /* Pods-KeepinCRUD_Tests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		E261BBC5BE4BA939143278E2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8D76DAB1B4F968C45D845E06 /* Pods_KeepinCRUD_Example.framework */,
+				66713C05C33DB258758A19A4 /* Pods_KeepinCRUD_Tests.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -176,11 +175,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 607FACEF1AFB9204008FA782 /* Build configuration list for PBXNativeTarget "KeepinCRUD_Example" */;
 			buildPhases = (
-				94A22E8630E99FE56583D0A5 /* [CP] Check Pods Manifest.lock */,
+				F3C5F466FAEC6595AE61EB2B /* [CP] Check Pods Manifest.lock */,
 				607FACCC1AFB9204008FA782 /* Sources */,
 				607FACCD1AFB9204008FA782 /* Frameworks */,
 				607FACCE1AFB9204008FA782 /* Resources */,
-				0C2A97EAEB717E5B65587A66 /* [CP] Embed Pods Frameworks */,
+				35286D8598D2FF7F4D8E94A9 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -195,11 +194,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 607FACF21AFB9204008FA782 /* Build configuration list for PBXNativeTarget "KeepinCRUD_Tests" */;
 			buildPhases = (
-				1F9C1F819CF9F54C51B56BDB /* [CP] Check Pods Manifest.lock */,
+				1CCBE0B271BA283DF1468F92 /* [CP] Check Pods Manifest.lock */,
 				607FACE11AFB9204008FA782 /* Sources */,
 				607FACE21AFB9204008FA782 /* Frameworks */,
 				607FACE31AFB9204008FA782 /* Resources */,
-				D2A2754467B034D66444A7A4 /* [CP] Embed Pods Frameworks */,
+				067B8B75A16626A9591AB8A2 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -275,41 +274,43 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0C2A97EAEB717E5B65587A66 /* [CP] Embed Pods Frameworks */ = {
+		067B8B75A16626A9591AB8A2 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-KeepinCRUD_Example/Pods-KeepinCRUD_Example-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-KeepinCRUD_Tests/Pods-KeepinCRUD_Tests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/BigInt/BigInt.framework",
 				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/EthereumAddress/EthereumAddress.framework",
-				"${BUILT_PRODUCTS_DIR}/KeepinCRUD/KeepinCRUD.framework",
+				"${BUILT_PRODUCTS_DIR}/JWTsSwift/JWTsSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SipHash/SipHash.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftRLP/SwiftRLP.framework",
-				"${BUILT_PRODUCTS_DIR}/scrypt/scrypt.framework",
+				"${BUILT_PRODUCTS_DIR}/VerifiableSwift/VerifiableSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/secp256k1_swift/secp256k1_swift.framework",
 				"${BUILT_PRODUCTS_DIR}/web3iOS/web3Swift.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSnapshotTestCase/FBSnapshotTestCase.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BigInt.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EthereumAddress.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeepinCRUD.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JWTsSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SipHash.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftRLP.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/scrypt.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VerifiableSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/secp256k1_swift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/web3Swift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSnapshotTestCase.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KeepinCRUD_Example/Pods-KeepinCRUD_Example-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KeepinCRUD_Tests/Pods-KeepinCRUD_Tests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		1F9C1F819CF9F54C51B56BDB /* [CP] Check Pods Manifest.lock */ = {
+		1CCBE0B271BA283DF1468F92 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -331,7 +332,45 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		94A22E8630E99FE56583D0A5 /* [CP] Check Pods Manifest.lock */ = {
+		35286D8598D2FF7F4D8E94A9 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KeepinCRUD_Example/Pods-KeepinCRUD_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/BigInt/BigInt.framework",
+				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/EthereumAddress/EthereumAddress.framework",
+				"${BUILT_PRODUCTS_DIR}/JOSESwift/JOSESwift.framework",
+				"${BUILT_PRODUCTS_DIR}/JWTsSwift/JWTsSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/KeepinCRUD/KeepinCRUD.framework",
+				"${BUILT_PRODUCTS_DIR}/SipHash/SipHash.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftRLP/SwiftRLP.framework",
+				"${BUILT_PRODUCTS_DIR}/VerifiableSwift/VerifiableSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/secp256k1_swift/secp256k1_swift.framework",
+				"${BUILT_PRODUCTS_DIR}/web3iOS/web3Swift.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BigInt.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EthereumAddress.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JOSESwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JWTsSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeepinCRUD.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SipHash.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftRLP.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VerifiableSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/secp256k1_swift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/web3Swift.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KeepinCRUD_Example/Pods-KeepinCRUD_Example-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F3C5F466FAEC6595AE61EB2B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -353,40 +392,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D2A2754467B034D66444A7A4 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-KeepinCRUD_Tests/Pods-KeepinCRUD_Tests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/BigInt/BigInt.framework",
-				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/EthereumAddress/EthereumAddress.framework",
-				"${BUILT_PRODUCTS_DIR}/SipHash/SipHash.framework",
-				"${BUILT_PRODUCTS_DIR}/SwiftRLP/SwiftRLP.framework",
-				"${BUILT_PRODUCTS_DIR}/scrypt/scrypt.framework",
-				"${BUILT_PRODUCTS_DIR}/secp256k1_swift/secp256k1_swift.framework",
-				"${BUILT_PRODUCTS_DIR}/web3iOS/web3Swift.framework",
-				"${BUILT_PRODUCTS_DIR}/FBSnapshotTestCase/FBSnapshotTestCase.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BigInt.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EthereumAddress.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SipHash.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftRLP.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/scrypt.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/secp256k1_swift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/web3Swift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSnapshotTestCase.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KeepinCRUD_Tests/Pods-KeepinCRUD_Tests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -397,6 +402,7 @@
 				E30C087C25AD7FD40032C89E /* FirstViewController.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				E3C4D45A268D5D8000456F6C /* MKeepinUtil.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -539,7 +545,7 @@
 		};
 		607FACF01AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AE177264ABB985D8207E2EAB /* Pods-KeepinCRUD_Example.debug.xcconfig */;
+			baseConfigurationReference = 12A45C80F9C743DA6E502DA4 /* Pods-KeepinCRUD_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = C7YYJHX9GB;
@@ -555,7 +561,7 @@
 		};
 		607FACF11AFB9204008FA782 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FEE52145B791C7021DE50DC2 /* Pods-KeepinCRUD_Example.release.xcconfig */;
+			baseConfigurationReference = E0D52A2E95A7C2D277057D0C /* Pods-KeepinCRUD_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = C7YYJHX9GB;
@@ -571,7 +577,7 @@
 		};
 		607FACF31AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4064CAA28A19DFA9B1A63693 /* Pods-KeepinCRUD_Tests.debug.xcconfig */;
+			baseConfigurationReference = 69CB9057F46D5B34CFF4DBB2 /* Pods-KeepinCRUD_Tests.debug.xcconfig */;
 			buildSettings = {
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -594,7 +600,7 @@
 		};
 		607FACF41AFB9204008FA782 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E6011C8022C6C0A2370CEB57 /* Pods-KeepinCRUD_Tests.release.xcconfig */;
+			baseConfigurationReference = B893FC3CFE64452FF2621E4F /* Pods-KeepinCRUD_Tests.release.xcconfig */;
 			buildSettings = {
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (

@@ -1,33 +1,40 @@
 PODS:
   - BigInt (3.1.0):
     - SipHash (~> 1.2)
-  - CryptoSwift (0.15.0)
-  - EthereumAddress (1.0.0):
-    - CryptoSwift (~> 0.13)
+  - CryptoSwift (1.4.0)
+  - EthereumAddress (1.3.0):
+    - CryptoSwift (~> 1.0)
   - FBSnapshotTestCase (2.1.4):
     - FBSnapshotTestCase/SwiftSupport (= 2.1.4)
   - FBSnapshotTestCase/Core (2.1.4)
   - FBSnapshotTestCase/SwiftSupport (2.1.4):
     - FBSnapshotTestCase/Core
-  - KeepinCRUD (0.1.0):
-    - web3iOS (~> 1.1.0)
-  - scrypt (2.0):
-    - CryptoSwift (~> 0.11)
+  - JOSESwift (2.4.0)
+  - JWTsSwift (0.1.1):
+    - secp256k1_swift
+  - KeepinCRUD (0.1.9):
+    - JOSESwift
+    - JWTsSwift
+    - VerifiableSwift
+    - web3iOS (~> 1.1.9)
   - secp256k1_swift (1.0.3)
   - SipHash (1.2.2)
   - SwiftRLP (1.2):
     - BigInt (~> 3.1)
-  - web3iOS (1.1.0):
-    - BigInt (~> 3.1)
-    - EthereumAddress (~> 1.0.0)
-    - scrypt (~> 2.0)
+  - VerifiableSwift (0.2.0):
+    - JWTsSwift
+  - web3iOS (1.1.9):
+    - BigInt
+    - CryptoSwift
+    - EthereumAddress
     - secp256k1_swift (~> 1.0.3)
     - SwiftRLP (~> 1.1)
 
 DEPENDENCIES:
   - FBSnapshotTestCase (~> 2.1.4)
   - KeepinCRUD (from `../`)
-  - web3iOS (~> 1.1.0)
+  - VerifiableSwift
+  - web3iOS (~> 1.1.9)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -35,10 +42,12 @@ SPEC REPOS:
     - CryptoSwift
     - EthereumAddress
     - FBSnapshotTestCase
-    - scrypt
+    - JOSESwift
+    - JWTsSwift
     - secp256k1_swift
     - SipHash
     - SwiftRLP
+    - VerifiableSwift
   https://github.com/METADIUM/Web3Swift-iOS:
     - web3iOS
 
@@ -48,16 +57,18 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   BigInt: 76b5dfdfa3e2e478d4ffdf161aeede5502e2742f
-  CryptoSwift: 769f58a9e89f64e8796c2e59ce5f002dc81a2438
-  EthereumAddress: f476e1320dca3a0024431e713ede7a09c7eb7796
+  CryptoSwift: 7cc902df1784de3b389a387756c7d710f197730c
+  EthereumAddress: 39fe8e11cf04e4e9902b55ae653dbc4e0aee5f30
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
-  KeepinCRUD: c2d6a1fd80f19fa376fb59fe6e14d0d9075f3437
-  scrypt: 3fe5b1a3b0976f97cd87488673a8f7c65708cc84
+  JOSESwift: 7ff178bb9173ff42c6e990929a9f2fa702a34f69
+  JWTsSwift: eea56c3b1c43382a0ebb4f0bbe0947538ce88453
+  KeepinCRUD: 8a28776d182acd094dc5656114b2c40e7baa961b
   secp256k1_swift: 4fc5c4b2d2c6d21ee8ccb868cdc92da12f38bed9
   SipHash: fad90a4683e420c52ef28063063dbbce248ea6d4
   SwiftRLP: 98a02b2210128353ca02e4c2f4d83e2a9796db4f
-  web3iOS: a31e19ac0bbe0558b7dd7e1e9f5e74790a33e9e0
+  VerifiableSwift: 59895b5a8e7e2db4f3637c62e1ca7a8d97ddbdca
+  web3iOS: b6bbba1a5d078c46eeb095902c41b580787ac039
 
-PODFILE CHECKSUM: c252b70edc0f5a07f7abb12235b6aecc87c21dfd
+PODFILE CHECKSUM: dd6e15d13af55e4e323daa533c5f4ca5cada751e
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.1
