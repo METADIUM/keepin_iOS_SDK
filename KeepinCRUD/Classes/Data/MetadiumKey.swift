@@ -11,7 +11,6 @@ public class MetadiumKey: NSObject {
     public var publicKey: String?
     public var privateKey: String?
     public var address: String?
-    public var nemonic: String?
 }
 
 

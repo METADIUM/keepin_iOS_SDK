@@ -16,6 +16,7 @@ class KDefine: NSObject {
     static let kMetadium_Real_EndPoind: String = "https://api.metadium.com/prod"
     static let kMetadium_Test_EndPoind: String = "https://delegator.metadium.com"
     
+    static let kResolver_Identifiers: String = "https://resolver.metadium.com/1.0/identifiers/"
     
     static let kPrefix: String = "\u{19}Ethereum Signed Message:\n"
     

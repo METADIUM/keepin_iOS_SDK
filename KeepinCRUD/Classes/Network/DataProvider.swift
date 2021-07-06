@@ -7,13 +7,11 @@
 
 import UIKit
 
+public typealias ServiceResponse = (URLResponse?, Any?, Error?) -> Void
 
-typealias ServiceResponse = (URLResponse?, Any?, Error?) -> Void
-
-class DataProvider: NSObject {
-
+public class DataProvider: NSObject {
     
-    class func jsonRpcMethod(url: URL, method: String, parmas: [[String: Any]]? = [[:]], complection: @escaping ServiceResponse) {
+    public class func jsonRpcMethod(url: URL, method: String, parmas: [[String: Any]]? = [[:]], complection: @escaping ServiceResponse) {
         let session = URLSession.shared
         let request = NSMutableURLRequest.init(url: url)
         request.httpMethod = "POST"
@@ -38,6 +36,26 @@ class DataProvider: NSObject {
             
             return complection(response, data, nil)
             
+        }
+        
+        task.resume()
+    }
+    
+    
+    public class func reqDidDocument(did: String, url: String, complection: @escaping ServiceResponse) {
+        let session = URLSession.shared
+        let req = NSMutableURLRequest(url: URL(string: url + did)!)
+        req.httpMethod = "GET"
+        
+        let task = session.dataTask(with: req as URLRequest) { (data, response, error) in
+            
+            if error != nil {
+                return complection(response, nil, error)
+            }
+            
+            let result = try? JSONSerialization.jsonObject(with: data!, options: .mutableLeaves) as! NSDictionary
+            
+            return complection(response, result, nil)
         }
         
         task.resume()

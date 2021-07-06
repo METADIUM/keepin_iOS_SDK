@@ -22,15 +22,15 @@ protocol MetaDelegatorMessenger {
 
 public class MetaDelegator: NSObject {
     
-    var registryAddress: RegistryAddress?
+    public var registryAddress: RegistryAddress?
+    public var keyStore: EthereumKeystoreV3!
+    public var delegatorUrl: URL!
     
     var ethereumClient: EthereumClient!
-    var delegatorUrl: URL!
+    
     var nodeUrl: URL!
     var didPrefix: String!
 
-    public var keyStore: EthereumKeystoreV3!
-    
     var signData: Data!
     
     var timeStamp: Int!
@@ -57,27 +57,29 @@ public class MetaDelegator: NSObject {
     
     
     
+    
     public func getAllServiceAddress() {
         if self.registryAddress == nil {
             
-            let group = DispatchGroup()
-            group.enter()
+            let semaPhore = DispatchSemaphore(value: 0)
             
             self.getAllServiceAddress { (registryAddress, error) in
                 if error != nil {
-                    group.leave()
+                    semaPhore.signal()
                     
                     return
                 }
                 
                 self.registryAddress = registryAddress
                 
-                group.leave()
+                semaPhore.signal()
             }
             
-            group.wait()
+            semaPhore.wait()
         }
     }
+    
+    
     
     
     
@@ -94,6 +96,7 @@ public class MetaDelegator: NSObject {
                 return complection(nil, error)
             }
             
+            
             if data != nil {
                 let registryAddress = RegistryAddress.init(dic: data as! Dictionary<String, Any>)
                 
@@ -102,6 +105,7 @@ public class MetaDelegator: NSObject {
 
         }
     }
+    
     
     
     
@@ -151,7 +155,13 @@ public class MetaDelegator: NSObject {
     
     /**
      * DID 생성
+     * @param signData
+     * @r
+     * @s
+     * @v
+     * @return transactionType, txID
      */
+    
     public func createIdentityDelegated(signData: Data, r: String, s: String, v: String, complection: @escaping(MetaTransactionType?, String?, Error?) -> Void) {
         
         self.getAllServiceAddress()
@@ -186,7 +196,7 @@ public class MetaDelegator: NSObject {
      * @return transactionType, txID
      */
     
-    public func addPublicKeyDelegated(signData: Data, r: String, s: String, v: String, complection: @escaping(MetaTransactionType?, String?, Error?) -> Void) {
+    public func addPublicKeyDelegated(signData: Data, r: String, s: String, v: String, complection: @escaping(MetaTransactionType?, String?, Error?) -> ()) {
         
         self.getAllServiceAddress()
         
@@ -245,6 +255,16 @@ public class MetaDelegator: NSObject {
     
     
     
+    /**
+     * 모든 서비스 키 삭제
+     * @param address
+     * @param signData
+     * @r
+     * @s
+     * @v
+     * @return transactionType, txID
+     */
+    
     public func removeKeyDelegated(r: String, s: String, v: String, complection: @escaping(MetaTransactionType?, String?, Error?) -> Void) {
         self.getAllServiceAddress()
         
@@ -267,6 +287,17 @@ public class MetaDelegator: NSObject {
     }
     
     
+    
+    /**
+     * 퍼블릭 키 삭제
+     * @param address
+     * @param signData
+     * @r
+     * @s
+     * @v
+     * @return transactionType, txID
+     */
+    
     public func removePublicKeyDelegated(r: String, s: String, v: String, complection: @escaping(MetaTransactionType?, String?, Error?) -> Void) {
         self.getAllServiceAddress()
         
@@ -287,6 +318,18 @@ public class MetaDelegator: NSObject {
             }
         }
     }
+    
+    
+    
+    /**
+     * associated_address  삭제
+     * @param address
+     * @param signData
+     * @r
+     * @s
+     * @v
+     * @return transactionType, txID
+     */
     
     public func removeAssociatedAddressDelegated(r: String, s: String, v: String, complection: @escaping(MetaTransactionType?, String?, Error?) -> Void) {
         self.getAllServiceAddress()

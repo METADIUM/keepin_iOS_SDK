@@ -9,7 +9,9 @@ import UIKit
 import web3Swift
 import BigInt
 import CryptoSwift
-
+import JOSESwift
+import JWTsSwift
+import VerifiableSwift
 
 public typealias TransactionRecipt = (EthereumClientError?, EthereumTransactionReceipt?) -> Void
 
@@ -24,10 +26,6 @@ public enum MetaTransactionType {
 
 public class MetaWallet: NSObject, MetaDelegatorMessenger {
     
-//    public enum Error: Swift.Error {
-//        case noneRegistryAddress
-//    }
-    
     public enum WalletError: Error {
         case noneRegistryAddress(String)
     }
@@ -41,7 +39,8 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
     var keyStore: EthereumKeystoreV3?
     
     var did: String! = ""
-    var nemonic: String? = ""
+    var privateKey: String? = ""
+    var didDocument: DiDDocument!
     
     
     func sendTxID(txID: String, type: MetaTransactionType) {
@@ -50,34 +49,22 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
     }
     
     
-    public init(delegator: MetaDelegator, nemonic: String? = "", did: String? = "") {
+    public init(delegator: MetaDelegator, privateKey: String? = "", did: String? = "") {
         super.init()
         
         self.delegator = delegator
         self.delegator.messenger = self
         
-        self.nemonic = nemonic
+        self.privateKey = privateKey
         self.did = did
         
         /**
          * 로컬에 저장되어 있는 privateKey로 keystore를 가져온다.
          */
-        if !nemonic!.isEmpty {
-            let seed = BIP39.seedFromMmemonics(nemonic!)
-            
+        if !privateKey!.isEmpty {
             do {
-                let bip32keyStore = try BIP32Keystore(seed: seed!, password: "", prefixPath: KDefine.kBip44PrefixPath, aesMode: KDefine.kAes128CBC)
-                let address = bip32keyStore?.addresses?.first
-                
-                do {
-                    let privateKey = try bip32keyStore?.UNSAFE_getPrivateKeyData(password: "", account: address!).toHexString()
-                    self.keyStore = try! EthereumKeystoreV3.init(privateKey: Data.init(hex: privateKey!))
-                    
-                    self.delegator.keyStore = self.keyStore!
-                    
-                } catch {
-                    print(error.localizedDescription)
-                }
+                self.keyStore = try EthereumKeystoreV3.init(privateKey: Data.init(hex: privateKey!))
+                self.delegator.keyStore = self.keyStore
                 
             } catch {
                 print(error.localizedDescription)
@@ -91,34 +78,18 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
      */
     public func createKey() -> MetadiumKey? {
         
-        let entropy = Data.randomBytes(length: KDefine.kEntropy_Length)
-        let nemonic = BIP39.generateMnemonicsFromEntropy(entropy: entropy!)
-        let seed = BIP39.seedFromMmemonics(nemonic!)
-        
         do {
-            let store = try BIP32Keystore(seed: seed!, password: "", prefixPath: KDefine.kBip44PrefixPath, aesMode: KDefine.kAes128CBC)
-            let address = store?.addresses?.first
+            self.keyStore = try EthereumKeystoreV3.init()
+            self.account = try? EthereumAccount.init(keyStore: self.keyStore!)
             
+            self.delegator.keyStore = self.keyStore!
             
-            do {
-                let privateKey = try store?.UNSAFE_getPrivateKeyData(password: "", account: address!).toHexString()
-                self.keyStore = try! EthereumKeystoreV3.init(privateKey: Data.init(hex: privateKey!))
-                
-                self.delegator.keyStore = self.keyStore!
-                
-                let account = try? EthereumAccount.init(keyStore: self.keyStore!)
-                
-                let key = MetadiumKey()
-                key.address = address?.address
-                key.privateKey = account?.privateKey
-                key.publicKey = account?.publicKey
-                key.nemonic = nemonic
-                
-                return key
-                
-            } catch {
-                print(error.localizedDescription)
-            }
+            let key = MetadiumKey()
+            key.address = account?.address
+            key.privateKey = account?.privateKey
+            key.publicKey = account?.publicKey
+            
+            return key
             
         } catch  {
             print(error.localizedDescription)
@@ -134,27 +105,21 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
      */
     
     public func createServiceKey() -> MetadiumKey? {
-        let entropy = Data.randomBytes(length: KDefine.kEntropy_Length)
-        let nemonic = BIP39.generateMnemonicsFromEntropy(entropy: entropy!)
-        let seed = BIP39.seedFromMmemonics(nemonic!)
         
         do {
-            let store = try BIP32Keystore(seed: seed!, password: "", prefixPath: KDefine.kBip44PrefixPath, aesMode: KDefine.kAes128CBC)
-            let address = store?.addresses?.first
+            self.keyStore = try EthereumKeystoreV3.init()
+            self.account = try? EthereumAccount.init(keyStore: self.keyStore!)
             
-            let privateKey = try store?.UNSAFE_getPrivateKeyData(password: "", account: address!).toHexString()
-            let keyStore = try! EthereumKeystoreV3.init(privateKey: Data.init(hex: privateKey!))
-            let account = try? EthereumAccount.init(keyStore: keyStore!)
+            self.delegator.keyStore = self.keyStore
             
             let key = MetadiumKey()
-            key.address = address?.address
+            key.address = account?.address
             key.privateKey = account?.privateKey
             key.publicKey = account?.publicKey
-            key.nemonic = nemonic
             
             return key
             
-        } catch {
+        } catch  {
             print(error.localizedDescription)
         }
         
@@ -528,6 +493,8 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
     }
     
     
+    
+    
     private func getEin(receipt: EthereumTransactionReceipt) -> Bool {
         
         let result = MHelper.getEvent(receipt: receipt, string: "{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"initiator\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"ein\",\"type\":\"uint256\"},{\"indexed\":false,\"name\":\"recoveryAddress\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"associatedAddress\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"providers\",\"type\":\"address[]\"},{\"indexed\":false,\"name\":\"resolvers\",\"type\":\"address[]\"},{\"indexed\":false,\"name\":\"delegated\",\"type\":\"bool\"}],\"name\":\"IdentityCreated\",\"type\":\"event\"}")
@@ -543,6 +510,138 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
     }
     
     
+    
+    public func reqDiDDocument(did: String, complection: @escaping(DiDDocument?, Error?) -> Void) {
+        
+        var url = "https://resolver.metadium.com/1.0/identifiers/"
+        
+        if did.contains("did:meta:testnet:") {
+            url = "https://testnetresolver.metadium.com/1.0/identifiers/"
+        }
+        
+        DataProvider.reqDidDocument(did: did, url: url) { (response, result, error) in
+            if error != nil {
+                return complection(nil, error)
+            }
+            
+            if let dic = result as? NSDictionary {
+                let dicDocu = dic["didDocument"]
+                
+                let didDocument = DiDDocument.init(dic: dicDocu as! Dictionary<String, Any>)
+                
+                return complection(didDocument, nil)
+            }
+        }
+    }
+    
+    
+    /**
+     * Sign verifiable credential, presntation
+     */
+    public func sign(verifiable: Verifiable, nonce: String, claim: JWT?) throws -> JWSObject? {
+        
+        if let verify = verifiable as? VerifiableCredential {
+            verify.issuer = self.getDid()
+            
+            return try verify.sign(kid: self.getKid(), nonce: nonce, signer: ECDSASigner.init(privateKey: self.account.privateKey.data(using: .utf8)!), baseClaims: claim)
+            
+        }
+        
+        if let verify = verifiable as? VerifiablePresentation {
+            verify.holder = self.getDid()
+            
+            return try verify.sign(kid: self.getKid(), nonce: nonce, signer: ECDSASigner.init(privateKey: self.account.privateKey.data(using: .utf8)!), baseClaims: claim)
+        }
+        
+        return nil
+    }
+    
+    
+    
+    /**
+     * Issue verifiable credentail
+     */
+    public func issueCredential(types: [String], id: String?, nonce: String, issuanceDate: Date?, expirationDate: Date?, ownerDid: String, subjects: [String: Any]) throws -> JWSObject? {
+        
+        let vc = try? VerifiableCredential.init()
+        vc!.addTypes(types: types)
+        
+        if id != nil {
+            vc!.id = id
+        }
+        
+        if issuanceDate != nil {
+            vc?.issuanceDate = issuanceDate
+        }
+        
+        if expirationDate != nil {
+            vc?.expirationDate = expirationDate
+        }
+        
+        return try self.sign(verifiable: vc!, nonce: nonce, claim: nil)
+    }
+    
+    
+    /**
+     * Issue verifiable presentation
+     */
+    public func issuePresentation(types: [String], id: String?, nonce: String, issuanceDate: Date?, expirationDate: Date?, vcList: [String]) throws -> JWSObject? {
+        let vp = try? VerifiablePresentation.init()
+        vp?.addTypes(types: types)
+        
+        if id != nil {
+            vp?.id = id
+        }
+        
+        for vc in vcList {
+            vp?.addVerifiableCredential(verifiableCredential: vc)
+        }
+        
+        let claims = JWT()
+        
+        if issuanceDate != nil {
+            claims.notBeforeTime = issuanceDate
+            claims.issuedAt = issuanceDate
+        }
+        
+        if expirationDate != nil {
+            claims.expirationTime = expirationDate
+        }
+        
+        return try self.sign(verifiable: vp!, nonce: nonce, claim: claims)
+    }
+    
+    
+    
+    /**
+     * did, privatekey의 json String
+     */
+    public func toJson() -> String? {
+        
+        if self.keyStore != nil {
+            
+            let account = try? EthereumAccount.init(keyStore: self.keyStore!)
+            
+            let dic = ["did": self.getDid(), "private_key": account!.privateKey]
+            
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: dic, options: [])
+                
+                let jsonStr = String(data: jsonData, encoding: .utf8)
+                
+                return jsonStr
+            }
+            catch {
+                return nil
+            }
+        }
+        
+        return nil
+    }
+    
+    
+    
+    
     public func getKey() -> MetadiumKey? {
         if self.keyStore != nil {
             let account = try? EthereumAccount.init(keyStore: self.keyStore!)
@@ -551,7 +650,6 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
             key.address = account?.address
             key.privateKey = account?.privateKey
             key.publicKey = account?.publicKey
-            key.nemonic = self.nemonic
             
             return key
         }
