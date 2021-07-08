@@ -1,9 +1,11 @@
-# KeepinCRUD
+# Metadium DID SDK for iOS
 
 [![CI Status](https://img.shields.io/travis/jinsikhan/KeepinCRUD.svg?style=flat)](https://travis-ci.org/jinsikhan/KeepinCRUD)
 [![Version](https://img.shields.io/cocoapods/v/KeepinCRUD.svg?style=flat)](https://cocoapods.org/pods/KeepinCRUD)
 [![License](https://img.shields.io/cocoapods/l/KeepinCRUD.svg?style=flat)](https://cocoapods.org/pods/KeepinCRUD)
 [![Platform](https://img.shields.io/cocoapods/p/KeepinCRUD.svg?style=flat)](https://cocoapods.org/pods/KeepinCRUD)
+
+### DID 생성 및 키 관리 기능과 Verifiable Credential의 서명과 검증에 대한 기능을 제공한다.
 
 ## Example
 
