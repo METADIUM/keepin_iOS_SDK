@@ -212,6 +212,65 @@ pod 'KeepinCRUD'
     
     
     
+### Get DID Document
+#### DID Document 정보를 얻는다.
+
+    let did = self.wallet?.getDid()
+
+    self.wallet?.reqDiDDocument(did: did!, complection: { (document, error) in
+        if error != nil {
+            return
+        }
+        
+        let didDocument = document
+    })
+    
+    
+    
+### Verifiable Credential
+#### Verifiable credential, Verifiable presentation 발급 및 검증
+#### Issue Credential
+
+#### verifiable credential을 발급한다.
+#### 발급자(Issuer)는 DID가 생성되어 있어야 하며 credential의 이름(types), 사용자(holder)의 DID, 발급할 내용(claims)가 필수로 필요하다.
+
+    let issuanceDate = Date()
+    let expirationDate = Date()
+    let nonce = Data.randomBytes(length: 32)?.base64EncodedString()
+
+    let vc = try? self.wallet?.issueCredential(types: ["NameCredential"],
+                                               id: "http://aa.metadium.com/credential/name/343",
+                                               nonce: nonce,
+                                               issuanceDate: issuanceDate,
+                                               expirationDate: expirationDate,
+                                               ownerDid: "did:meta:00000...00003159",
+                                               subjects: ["name": "Keepin"]) as! JWSObject
+
+
+    let serializedVC = try? vc?.serialize()
+    
+    
+    
+    
+#### Issue Presentation
+#### verifiable presentation을 발급한다.
+#### 사용자(holder)는 DID가 생성되어 있어야 하며 검증자(verifier)에게 전달할 발급받은 credential을 포함해야 한다.
+
+    let issuanceDate = Date()
+    let expirationDate = Date()
+    let nonce = Data.randomBytes(length: 32)?.base64EncodedString()
+
+    let vp = try? self.wallet?.issuePresentation(types: ["TestPresentation"],
+                                                 id: "http://aa.metadium.com/presentation/343",
+                                                 nonce: nonce,
+                                                 issuanceDate: issuanceDate,
+                                                 expirationDate: expirationDate,
+                                                 vcList: [serializedVC]) as! JWSObject
+
+    let serializedVP = try? vp?.serialize()
+    
+    
+    
 ## Author
 
 jinsikhan, jshan@coinplug.com

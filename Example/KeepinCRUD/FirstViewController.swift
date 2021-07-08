@@ -9,6 +9,7 @@
 import UIKit
 import web3Swift
 import KeepinCRUD
+import JWTsSwift
 
 class FirstViewController: UIViewController, UITextFieldDelegate {
     
@@ -121,6 +122,43 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
             self.present(alert, animated: true, completion: nil)
         }
     }
+    
+    
+    /*
+    @IBAction func credentialButtonAction() {
+        
+        let issuanceDate = Date()
+        let expirationDate = Date()
+        let nonce = Data.randomBytes(length: 32)?.base64EncodedString()
+        
+        let vc = try? self.wallet?.issueCredential(types: ["NameCredential"],
+                                                   id: "http://aa.metadium.com/credential/name/343",
+                                                   nonce: nonce,
+                                                   issuanceDate: issuanceDate,
+                                                   expirationDate: expirationDate,
+                                                   ownerDid: "did:meta:00000...00003159",
+                                                   subjects: ["name": "Keepin"]) as! JWSObject
+        
+        
+        let serializedVC = try? vc?.serialize()
+        
+    }
+    
+    @IBAction func presentationButtonAction() {
+        let issuanceDate = Date()
+        let expirationDate = Date()
+        let nonce = Data.randomBytes(length: 32)?.base64EncodedString()
+        
+        let vp = try? self.wallet?.issuePresentation(types: ["TestPresentation"],
+                                                     id: "http://aa.metadium.com/presentation/343",
+                                                     nonce: nonce,
+                                                     issuanceDate: issuanceDate,
+                                                     expirationDate: expirationDate,
+                                                     vcList: [serializedVC]) as! JWSObject
+        
+        let serializedVP = try? vp?.serialize()
+    }
+ */
     
     
     @IBAction func removeKeyButtonAction() {
