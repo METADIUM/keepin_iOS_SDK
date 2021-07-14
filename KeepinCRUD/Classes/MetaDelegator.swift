@@ -29,6 +29,8 @@ public class MetaDelegator: NSObject {
     var ethereumClient: EthereumClient!
     
     var nodeUrl: URL!
+    var resolverUrl: String!
+    
     var didPrefix: String!
 
     var signData: Data!
@@ -43,11 +45,13 @@ public class MetaDelegator: NSObject {
      * @param node Url
      * @param didPrefix
      */
-    public init(delegatorUrl: String? = "https://testdelegator.metadium.com", nodeUrl: String? = "https://api.metadium.com/dev", didPrefix: String? = "did:meta:testnet:") {
+    public init(delegatorUrl: String? = "https://testdelegator.metadium.com", nodeUrl: String? = "https://api.metadium.com/dev", resolverUrl: String? = "https://testnetresolver.metadium.com/1.0/identifiers/", didPrefix: String? = "did:meta:testnet:") {
         super.init()
         
         self.delegatorUrl = URL(string: delegatorUrl!)
         self.nodeUrl = URL(string: nodeUrl!)
+        self.resolverUrl = resolverUrl
+        
         self.didPrefix = didPrefix!
         
         self.ethereumClient = EthereumClient.init(url: self.nodeUrl)

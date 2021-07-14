@@ -69,20 +69,22 @@ pod 'KeepinCRUD'
             return
         }
         
-        self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
-        
-            if error != nil {
-                return
-            }
-        
-            if receipt == nil {
-                self.wallet.transactionReceipt(type: type!, txId: txId!, complection: nil)
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.3) {
+            self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
             
-                return
-            }
-        
-            if receipt!.status == .success {
-                //Todo...
+                if error != nil {
+                    return
+                }
+            
+                if receipt == nil {
+                    self.wallet.transactionReceipt(type: type!, txId: txId!, complection: nil)
+                
+                    return
+                }
+            
+                if receipt!.status == .success {
+                    //Todo...
+                }
             }
         }
     }
@@ -168,12 +170,14 @@ pod 'KeepinCRUD'
             return
         }
     
-        self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
-        
-            if receipt!.status == .success {
-                //Todo..
-            }
-        })
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.3) {
+            self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
+            
+                if receipt!.status == .success {
+                    //Todo..
+                }
+            })
+        }
     })
     
     
@@ -186,12 +190,14 @@ pod 'KeepinCRUD'
             return
         }
     
-        self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
-        
-            if receipt!.status == .success {
-                //Todo...
-            }
-        })
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.3) {
+            self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
+            
+                if receipt!.status == .success {
+                    //Todo...
+                }
+            })
+        }
     })
     
 ### remove_associated_address_delegated
@@ -203,12 +209,14 @@ pod 'KeepinCRUD'
             return
         }
     
-        self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
-        
-            if receipt!.status == .success {
-                //Todo...
-            }
-        })
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.3) {
+            self.wallet?.transactionReceipt(type: type!, txId: txId!, complection: { (error, receipt) in
+            
+                if receipt!.status == .success {
+                    //Todo...
+                }
+            })
+        }
     })
 
     
@@ -271,6 +279,28 @@ pod 'KeepinCRUD'
 
     let serializedVP = try? vp?.serialize()
     
+    
+    
+    
+### Verify Credential or Presentation
+#### 네트워크가 메인넷이 안닌 경우 검증 전에 resolver URL 이 설정되어 있어야 정상적이 검증이 가능하다. Setup Network 참조
+#### 사용자 또는 검증자가 credential 또는 presentation 을 검증을 한다.
+
+
+    let jws = try? JWSObject.init(string: serializedVC)
+    let jwt = try? JWT.init(jsonData: jws!.payload)
+
+    let expireDate = jwt!.expirationTime
+
+    let isVerify =  try? self.wallet?.verify(jwt: jws!)
+
+    if isVerify == false {
+        //검증실패
+    }
+    else if (expireDate != nil && expireDate! > Date()) {
+        // 유효기간 초과
+    }
+        
     
     
 ## Author

@@ -30,6 +30,13 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
         case noneRegistryAddress(String)
     }
     
+    public enum verifyError: Error {
+        case networkError
+        case noneDidDocument
+        case failedVerify
+        case noneKid
+    }
+    
     var account: EthereumAccount!
     
     var delegator: MetaDelegator!
@@ -40,6 +47,7 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
     
     var did: String! = ""
     var privateKey: String? = ""
+    
     var didDocument: DiDDocument!
     
     
@@ -65,6 +73,7 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
             do {
                 self.keyStore = try EthereumKeystoreV3.init(privateKey: Data.init(hex: privateKey!))
                 self.delegator.keyStore = self.keyStore
+                self.account = try? EthereumAccount.init(keyStore: self.keyStore!)
                 
             } catch {
                 print(error.localizedDescription)
@@ -509,27 +518,84 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
         return false
     }
     
+
     
     
-    public func reqDiDDocument(did: String, complection: @escaping(DiDDocument?, Error?) -> Void) {
+    public func getDiDDocument(did: String) {
+            
+        let semaPhore = DispatchSemaphore(value: 0)
         
-        var url = "https://resolver.metadium.com/1.0/identifiers/"
-        
-        if did.contains("did:meta:testnet:") {
-            url = "https://testnetresolver.metadium.com/1.0/identifiers/"
+        self.reqDiDDocument(did: did) { (didDocument, error) in
+            if error != nil {
+                semaPhore.signal()
+                
+                return
+            }
+            
+            self.didDocument = didDocument
+            
+            semaPhore.signal()
         }
         
-        DataProvider.reqDidDocument(did: did, url: url) { (response, result, error) in
+        semaPhore.wait()
+    }
+    
+    
+    
+    public func verify(jwt: JWSObject) throws -> Bool {
+        
+        let kid = jwt.header.kid
+        
+        let arr = kid?.components(separatedBy: "#")
+        
+        if arr!.count > 0 {
+            let did = arr![0]
+            
+            self.getDiDDocument(did: did)
+            
+            if self.didDocument == nil {
+                throw verifyError.noneDidDocument
+            }
+            
+            let publicKey = self.didDocument.publicKey
+            
+            let publicKeyHex = (publicKey![0] as NSDictionary)["publicKeyHex"] as? String
+            let pubKey = Data.fromHex(publicKeyHex!)
+            
+            do {
+                let verified = try jwt.verify(verifier: ECDSAVerifier.init(publicKey: pubKey!))
+                
+                return verified
+            }
+            catch {
+                throw verifyError.failedVerify
+            }
+        }
+        
+        throw verifyError.noneKid
+    }
+    
+    
+    /**
+     * Get didDocument
+     */
+    public func reqDiDDocument(did: String, complection: @escaping(DiDDocument?, Error?) -> Void) {
+        
+        let url = self.delegator.resolverUrl
+        
+        DataProvider.reqDidDocument(did: did, url: url!) { (response, result, error) in
             if error != nil {
                 return complection(nil, error)
             }
             
             if let dic = result as? NSDictionary {
-                let dicDocu = dic["didDocument"]
                 
-                let didDocument = DiDDocument.init(dic: dicDocu as! Dictionary<String, Any>)
-                
-                return complection(didDocument, nil)
+                if let dicDocu = dic["didDocument"] as? Dictionary<String, Any> {
+                    
+                    let didDocument = DiDDocument.init(dic: dicDocu)
+                    
+                    return complection(didDocument, nil)
+                }
             }
         }
     }
