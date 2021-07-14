@@ -69,20 +69,21 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     
     
     @IBAction func didDocumentButtonAction() {
-//        let did = "did:meta:0000000000000000000000000000000000000000000000000000000000004f82"
+        let serializedVC = ""
+        let jws = try? JWSObject.init(string: serializedVC)
         
-        let did = self.wallet?.getDid()
+        let jwt = try? JWT.init(jsonData: jws!.payload)
         
-        self.wallet?.reqDiDDocument(did: did!, complection: { (document, error) in
-            if error != nil {
-                return
-            }
-            
-            let document = document
-            
-            print(document)
-        })
+        let expireDate = jwt!.expirationTime
         
+        let isVerify =  try? self.wallet?.verify(jwt: jws!)
+
+        if isVerify == false {
+            //검증실패
+        }
+        else if (expireDate != nil && expireDate! > Date()) {
+            // 유효기간 초과
+        }
     }
     
     
@@ -124,7 +125,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    /*
+    
     @IBAction func credentialButtonAction() {
         
         let issuanceDate = Date()
@@ -133,16 +134,17 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         
         let vc = try? self.wallet?.issueCredential(types: ["NameCredential"],
                                                    id: "http://aa.metadium.com/credential/name/343",
-                                                   nonce: nonce,
+                                                   nonce: nonce!,
                                                    issuanceDate: issuanceDate,
                                                    expirationDate: expirationDate,
-                                                   ownerDid: "did:meta:00000...00003159",
-                                                   subjects: ["name": "Keepin"]) as! JWSObject
+                                                   ownerDid: "did:meta:testnet:0000000000000000000000000000000000000000000000000000000000002f4c",
+                                                   subjects: ["name": "Keepin"])!
         
-        
-        let serializedVC = try? vc?.serialize()
-        
+        let serializedVC = try? vc?!.serialize()
     }
+    
+    
+    /*
     
     @IBAction func presentationButtonAction() {
         let issuanceDate = Date()

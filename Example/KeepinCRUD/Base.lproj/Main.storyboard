@@ -102,7 +102,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vc2-7a-TNy">
-                                <rect key="frame" x="24" y="425" width="327" height="44"/>
+                                <rect key="frame" x="24" y="273" width="327" height="44"/>
                                 <color key="backgroundColor" red="0.87843137250000003" green="0.12549019610000001" blue="0.12549019610000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="J7k-w6-Sav"/>
@@ -115,7 +115,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x0e-es-Grk">
-                                <rect key="frame" x="24" y="367" width="327" height="44"/>
+                                <rect key="frame" x="24" y="215" width="327" height="44"/>
                                 <color key="backgroundColor" red="1" green="0.31764705879999999" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="Cxw-vp-emq"/>
@@ -128,23 +128,41 @@
                                     <action selector="loadKeyButtonAction" destination="qoY-oL-87M" eventType="touchUpInside" id="JBO-cK-B31"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZSU-NG-Fi4">
+                                <rect key="frame" x="24" y="331" width="327" height="40"/>
+                                <color key="backgroundColor" red="0.0" green="0.33725490200000002" blue="0.81568627449999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="usJ-tO-XIb"/>
+                                </constraints>
+                                <state key="normal" title="Credential">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="credentialButtonAction" destination="qoY-oL-87M" eventType="touchUpInside" id="h2j-XK-edH"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="vXT-DU-Flf" firstAttribute="top" secondItem="GIV-wP-81D" secondAttribute="bottom" constant="14" id="0RD-h8-3ZE"/>
                             <constraint firstItem="CDI-BO-UaX" firstAttribute="leading" secondItem="EEd-7j-eOp" secondAttribute="leading" constant="24" id="2kc-Sm-ieP"/>
+                            <constraint firstAttribute="trailing" secondItem="ZSU-NG-Fi4" secondAttribute="trailing" constant="24" id="36D-X9-2hD"/>
                             <constraint firstItem="j0W-Nl-mue" firstAttribute="leading" secondItem="EEd-7j-eOp" secondAttribute="leading" constant="24" id="45O-Ct-5IK"/>
                             <constraint firstItem="j0W-Nl-mue" firstAttribute="top" secondItem="wZb-06-rbB" secondAttribute="bottom" constant="14" id="COf-F2-aWx"/>
                             <constraint firstAttribute="trailing" secondItem="KuH-jL-HQA" secondAttribute="trailing" constant="24" id="HmJ-xW-P9s"/>
+                            <constraint firstItem="wZb-06-rbB" firstAttribute="top" secondItem="ZSU-NG-Fi4" secondAttribute="bottom" constant="112" id="LeW-p8-HJt"/>
                             <constraint firstItem="8bK-Jf-7Vz" firstAttribute="top" secondItem="vXT-DU-Flf" secondAttribute="bottom" constant="24" id="Mjb-RQ-Aof"/>
                             <constraint firstItem="CDI-BO-UaX" firstAttribute="top" secondItem="VyI-IW-JZU" secondAttribute="bottom" constant="24" id="N8p-0t-tdo"/>
                             <constraint firstItem="j0W-Nl-mue" firstAttribute="width" secondItem="GIV-wP-81D" secondAttribute="width" id="NKr-Nx-hL1"/>
+                            <constraint firstItem="ZSU-NG-Fi4" firstAttribute="top" secondItem="Vc2-7a-TNy" secondAttribute="bottom" constant="14" id="Ngk-zx-hol"/>
                             <constraint firstItem="vXT-DU-Flf" firstAttribute="leading" secondItem="EEd-7j-eOp" secondAttribute="leading" constant="24" id="U8d-19-x2Q"/>
                             <constraint firstItem="Vc2-7a-TNy" firstAttribute="top" secondItem="x0e-es-Grk" secondAttribute="bottom" constant="14" id="WT3-oX-dZh"/>
                             <constraint firstItem="MOv-1C-f13" firstAttribute="top" secondItem="VyI-IW-JZU" secondAttribute="bottom" constant="107" id="YNN-Nl-HRY"/>
                             <constraint firstItem="GIV-wP-81D" firstAttribute="top" secondItem="wZb-06-rbB" secondAttribute="bottom" constant="14" id="bPq-dG-ngB"/>
+                            <constraint firstItem="ZSU-NG-Fi4" firstAttribute="leading" secondItem="EEd-7j-eOp" secondAttribute="leading" constant="24" id="dPn-gI-2BJ"/>
                             <constraint firstItem="KuH-jL-HQA" firstAttribute="leading" secondItem="EEd-7j-eOp" secondAttribute="leading" constant="24" id="e96-x1-efL"/>
                             <constraint firstAttribute="trailing" secondItem="Vc2-7a-TNy" secondAttribute="trailing" constant="24" id="hS4-7C-Zzi"/>
+                            <constraint firstItem="x0e-es-Grk" firstAttribute="top" secondItem="MOv-1C-f13" secondAttribute="bottom" constant="30" id="iY5-Pd-SLv"/>
                             <constraint firstAttribute="trailing" secondItem="wZb-06-rbB" secondAttribute="trailing" constant="24" id="itG-vx-vhx"/>
                             <constraint firstItem="KuH-jL-HQA" firstAttribute="top" secondItem="CDI-BO-UaX" secondAttribute="bottom" constant="8" symbolic="YES" id="jBJ-nd-n40"/>
                             <constraint firstAttribute="trailing" secondItem="x0e-es-Grk" secondAttribute="trailing" constant="24" id="jsJ-FR-Y17"/>
@@ -152,7 +170,6 @@
                             <constraint firstAttribute="trailing" secondItem="vXT-DU-Flf" secondAttribute="trailing" constant="24" id="sBk-ha-Xdm"/>
                             <constraint firstAttribute="trailing" secondItem="GIV-wP-81D" secondAttribute="trailing" constant="24" id="u77-i2-Q5J"/>
                             <constraint firstAttribute="trailing" secondItem="MOv-1C-f13" secondAttribute="trailing" constant="24" id="uRH-xz-qs5"/>
-                            <constraint firstItem="wZb-06-rbB" firstAttribute="top" secondItem="Vc2-7a-TNy" secondAttribute="bottom" constant="14" id="ueG-PP-WAW"/>
                             <constraint firstItem="GIV-wP-81D" firstAttribute="leading" secondItem="j0W-Nl-mue" secondAttribute="trailing" constant="10" id="wMW-Gq-PUk"/>
                             <constraint firstItem="Vc2-7a-TNy" firstAttribute="leading" secondItem="EEd-7j-eOp" secondAttribute="leading" constant="24" id="wPX-zu-mgs"/>
                             <constraint firstItem="wZb-06-rbB" firstAttribute="leading" secondItem="EEd-7j-eOp" secondAttribute="leading" constant="24" id="yRg-NU-Bbs"/>
