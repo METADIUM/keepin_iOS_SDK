@@ -1,6 +1,6 @@
 {
   "name": "KeepinCRUD",
-  "version": "0.2.1",
+  "version": "0.2.7",
   "swift_versions": "4.2",
   "summary": "Keepin Key CRUD",
   "description": "TODO: Add long description of the pod here.",
@@ -14,7 +14,7 @@
   },
   "source": {
     "git": "https://github.com/METADIUM/keepin_iOS_SDK",
-    "tag": "0.2.1"
+    "tag": "0.2.7"
   },
   "platforms": {
     "ios": "12.0"
