@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'KeepinCRUD'
-  s.version          = '0.2.5'
+  s.version          = '0.2.6'
   s.swift_version    = '4.2'
   s.summary          = 'Keepin Key CRUD'
 
@@ -39,7 +39,7 @@ TODO: Add long description of the pod here.
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-#  s.source = { :git => 'https://github.com/METADIUM/Web3Swift-iOS', :tag => '1.1.9' }
+  s.source = { :git => 'https://github.com/METADIUM/Web3Swift-iOS', :tag => '1.1.9' }
   s.dependency 'web3iOS', '~> 1.1.9'
   s.dependency 'JOSESwift'
   s.dependency 'VerifiableSwift'
