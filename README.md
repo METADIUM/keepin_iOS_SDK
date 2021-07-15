@@ -283,7 +283,7 @@ pod 'KeepinCRUD'
     
     
 ### Verify Credential or Presentation
-#### 네트워크가 메인넷이 안닌 경우 검증 전에 resolver URL 이 설정되어 있어야 정상적이 검증이 가능하다. Setup Network 참조
+#### 네트워크가 메인넷이 안닌 경우 검증 전에 resolver URL 이 설정되어 있어야 정상적이 검증이 가능하다.  
 #### 사용자 또는 검증자가 credential 또는 presentation 을 검증을 한다.
 
 

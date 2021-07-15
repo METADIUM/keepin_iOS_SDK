@@ -1,13 +1,13 @@
 
 platform :ios, '12.0'
 source 'https://github.com/CocoaPods/Specs.git'
-source 'https://github.com/METADIUM/Web3Swift-iOS'
+#source 'https://github.com/METADIUM/Web3Swift-iOS'
 
 
 
 def import_pods
-#  pod 'web3iOS', '~> 1.1.9', :git => 'https://github.com/METADIUM/Web3Swift-iOS.git'
-  pod 'web3iOS', '~> 1.1.9'
+  pod 'web3iOS', :git => 'https://github.com/METADIUM/Web3Swift-iOS.git'
+#  pod 'web3iOS', '~> 1.1.9'
   pod 'JOSESwift'
   pod 'VerifiableSwift'
 end
