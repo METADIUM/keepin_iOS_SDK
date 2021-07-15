@@ -1,7 +1,7 @@
 PODS:
   - BigInt (3.1.0):
     - SipHash (~> 1.2)
-  - CryptoSwift (1.4.0)
+  - CryptoSwift (1.4.1)
   - EthereumAddress (1.3.0):
     - CryptoSwift (~> 1.0)
   - FBSnapshotTestCase (2.1.4):
@@ -12,9 +12,8 @@ PODS:
   - JOSESwift (2.4.0)
   - JWTsSwift (0.1.1):
     - secp256k1_swift
-  - KeepinCRUD (0.1.9):
+  - KeepinCRUD (0.2.1):
     - JOSESwift
-    - JWTsSwift
     - VerifiableSwift
     - web3iOS (~> 1.1.9)
   - secp256k1_swift (1.0.3)
@@ -32,9 +31,10 @@ PODS:
 
 DEPENDENCIES:
   - FBSnapshotTestCase (~> 2.1.4)
+  - JOSESwift
   - KeepinCRUD (from `../`)
   - VerifiableSwift
-  - web3iOS (~> 1.1.9)
+  - web3iOS (from `https://github.com/METADIUM/Web3Swift-iOS.git`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -48,27 +48,32 @@ SPEC REPOS:
     - SipHash
     - SwiftRLP
     - VerifiableSwift
-  https://github.com/METADIUM/Web3Swift-iOS:
-    - web3iOS
 
 EXTERNAL SOURCES:
   KeepinCRUD:
     :path: "../"
+  web3iOS:
+    :git: https://github.com/METADIUM/Web3Swift-iOS.git
+
+CHECKOUT OPTIONS:
+  web3iOS:
+    :commit: 51202f15109b59510ef426df871f571dd1c5c412
+    :git: https://github.com/METADIUM/Web3Swift-iOS.git
 
 SPEC CHECKSUMS:
   BigInt: 76b5dfdfa3e2e478d4ffdf161aeede5502e2742f
-  CryptoSwift: 7cc902df1784de3b389a387756c7d710f197730c
+  CryptoSwift: 0bc800a7e6a24c4fc9ebeab97d44b0d5f73a78bd
   EthereumAddress: 39fe8e11cf04e4e9902b55ae653dbc4e0aee5f30
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
   JOSESwift: 7ff178bb9173ff42c6e990929a9f2fa702a34f69
   JWTsSwift: eea56c3b1c43382a0ebb4f0bbe0947538ce88453
-  KeepinCRUD: 8a28776d182acd094dc5656114b2c40e7baa961b
+  KeepinCRUD: de070576b59879cd58d7d7bf5043902970434b9b
   secp256k1_swift: 4fc5c4b2d2c6d21ee8ccb868cdc92da12f38bed9
   SipHash: fad90a4683e420c52ef28063063dbbce248ea6d4
   SwiftRLP: 98a02b2210128353ca02e4c2f4d83e2a9796db4f
   VerifiableSwift: 59895b5a8e7e2db4f3637c62e1ca7a8d97ddbdca
-  web3iOS: b6bbba1a5d078c46eeb095902c41b580787ac039
+  web3iOS: 57ecb4290b8486776b8fe22ffdf74082a7661514
 
-PODFILE CHECKSUM: dd6e15d13af55e4e323daa533c5f4ca5cada751e
+PODFILE CHECKSUM: 9707034eed2a956381986469dbac156c1ab26e99
 
 COCOAPODS: 1.10.1
