@@ -32,6 +32,7 @@ public class MetaDelegator: NSObject {
     var resolverUrl: String!
     
     var didPrefix: String!
+    var api_key: String!
 
     var signData: Data!
     
@@ -44,8 +45,10 @@ public class MetaDelegator: NSObject {
      * @param  delegate Url
      * @param node Url
      * @param didPrefix
+     * @param api_key
      */
-    public init(delegatorUrl: String? = "https://testdelegator.metadium.com", nodeUrl: String? = "https://api.metadium.com/dev", resolverUrl: String? = "https://testnetresolver.metadium.com/1.0/identifiers/", didPrefix: String? = "did:meta:testnet:") {
+    public init(delegatorUrl: String? = "https://testdelegator.metadium.com", nodeUrl: String? = "https://api.metadium.com/dev", resolverUrl: String? = "https://testnetresolver.metadium.com/1.0/identifiers/", didPrefix: String? = "did:meta:testnet:", api_key: String? = "") {
+        
         super.init()
         
         self.delegatorUrl = URL(string: delegatorUrl!)
@@ -53,6 +56,7 @@ public class MetaDelegator: NSObject {
         self.resolverUrl = resolverUrl
         
         self.didPrefix = didPrefix!
+        self.api_key = api_key
         
         self.ethereumClient = EthereumClient.init(url: self.nodeUrl)
         
@@ -94,8 +98,7 @@ public class MetaDelegator: NSObject {
      */
     public func getAllServiceAddress(complection: @escaping(RegistryAddress?, Error?) -> Void) {
         
-        DataProvider.jsonRpcMethod(url: self.delegatorUrl, method: "get_all_service_addresses") { (response, data, error) in
-            
+        DataProvider.jsonRpcMethod(url: self.delegatorUrl, api_key: self.api_key, method: "get_all_service_addresses") { (response, data, error) in
             if error != nil {
                 return complection(nil, error)
             }
@@ -106,7 +109,6 @@ public class MetaDelegator: NSObject {
                 
                 return complection(registryAddress, nil)
             }
-
         }
     }
     
@@ -176,7 +178,8 @@ public class MetaDelegator: NSObject {
 
         let params = [["recovery_address" : addr!, "associated_address": addr!, "providers":providers!, "resolvers": resolvers!, "v": v, "r": r, "s": s, "timestamp": self.timeStamp!]]
         
-        DataProvider.jsonRpcMethod(url: self.delegatorUrl, method: "create_identity", parmas: params) {(response, result, error) in
+        
+        DataProvider.jsonRpcMethod(url: self.delegatorUrl, api_key: self.api_key, method: "create_identity", parmas: params) {(response, result, error) in
             if error != nil {
                 return complection(.createDid, nil, error)
             }
@@ -211,7 +214,7 @@ public class MetaDelegator: NSObject {
 
         let params = [["resolver_address" : resolver_publicKey!, "associated_address": addr!, "public_key": publicKey, "v": v, "r": r, "s": s, "timestamp": self.timeStamp!]]
         
-        DataProvider.jsonRpcMethod(url: self.delegatorUrl, method: "add_public_key_delegated", parmas: params) {(response, result, error) in
+        DataProvider.jsonRpcMethod(url: self.delegatorUrl, api_key: self.api_key, method: "add_public_key_delegated", parmas: params) {(response, result, error) in
             if error != nil {
                 return complection(.addWalletPublicKey, nil, error)
             }
@@ -245,7 +248,7 @@ public class MetaDelegator: NSObject {
         let params = [["resolver_address" : resolver!, "associated_address": addr!, "key": address, "symbol": serviceId, "v": v, "r": r, "s": s, "timestamp": self.timeStamp!]]
         print(params)
         
-        DataProvider.jsonRpcMethod(url: self.delegatorUrl, method: "add_key_delegated", parmas: params) {(response, result, error) in
+        DataProvider.jsonRpcMethod(url: self.delegatorUrl, api_key: self.api_key, method: "add_key_delegated", parmas: params) {(response, result, error) in
             if error != nil {
                 return complection(.addServicePublicKey, nil, error)
             }
@@ -278,7 +281,7 @@ public class MetaDelegator: NSObject {
         let params = [["resolver_address" : resolver!, "associated_address": addr!, "v": v, "r": r, "s": s, "timestamp": self.timeStamp!]]
         print(params)
         
-        DataProvider.jsonRpcMethod(url: self.delegatorUrl, method: "remove_keys_delegated", parmas: params) {(response, result, error) in
+        DataProvider.jsonRpcMethod(url: self.delegatorUrl, api_key: self.api_key, method: "remove_keys_delegated", parmas: params) {(response, result, error) in
             if error != nil {
                 return complection(.removeKeys, nil, error)
             }
@@ -311,7 +314,7 @@ public class MetaDelegator: NSObject {
         let params = [["resolver_address" : resolver!, "associated_address": addr!, "v": v, "r": r, "s": s, "timestamp": self.timeStamp!]]
         print(params)
         
-        DataProvider.jsonRpcMethod(url: self.delegatorUrl, method: "remove_public_key_delegated", parmas: params) {(response, result, error) in
+        DataProvider.jsonRpcMethod(url: self.delegatorUrl, api_key: self.api_key, method: "remove_public_key_delegated", parmas: params) {(response, result, error) in
             if error != nil {
                 return complection(.removePublicKey, nil, error)
             }
@@ -343,7 +346,7 @@ public class MetaDelegator: NSObject {
         let params = [["address_to_remove": addr!, "v": v, "r": r, "s": s, "timestamp": self.timeStamp!]]
         print(params)
         
-        DataProvider.jsonRpcMethod(url: self.delegatorUrl, method: "remove_associated_address_delegated", parmas: params) {(response, result, error) in
+        DataProvider.jsonRpcMethod(url: self.delegatorUrl, api_key: self.api_key, method: "remove_associated_address_delegated", parmas: params) {(response, result, error) in
             if error != nil {
                 return complection(.removeAssociatedAddress, nil, error)
             }

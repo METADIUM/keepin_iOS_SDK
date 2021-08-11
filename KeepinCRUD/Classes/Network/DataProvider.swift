@@ -11,11 +11,18 @@ public typealias ServiceResponse = (URLResponse?, Any?, Error?) -> Void
 
 public class DataProvider: NSObject {
     
-    public class func jsonRpcMethod(url: URL, method: String, parmas: [[String: Any]]? = [[:]], complection: @escaping ServiceResponse) {
+    public class func jsonRpcMethod(url: URL, api_key: String?, method: String, parmas: [[String: Any]]? = [[:]], complection: @escaping ServiceResponse) {
         let session = URLSession.shared
         let request = NSMutableURLRequest.init(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json-rpc", forHTTPHeaderField: "Content-Type")
+        
+        if api_key != nil && !api_key!.isEmpty{
+            request.setValue(api_key, forHTTPHeaderField: "API-KEY")
+        }
+        else {
+            request.setValue("UNKNOWN", forHTTPHeaderField: "API-KEY")
+        }
         
         
         let jsonRpc = ["jsonrpc" : "2.0", "id" : 1, "method" : method, "params" : parmas!] as [String : Any]
@@ -28,9 +35,11 @@ public class DataProvider: NSObject {
             }
             
             
-            let result = try? JSONSerialization.jsonObject(with: data!, options: .mutableLeaves) as! NSDictionary
+            guard let result = try? JSONSerialization.jsonObject(with: data!, options: .mutableLeaves) as! NSDictionary else {
+                return complection(response, nil, error)
+            }
             
-            if let dic = result!["result"] as? Any {
+            if let dic = result["result"] {
                 return complection(response, dic, nil)
             }
             

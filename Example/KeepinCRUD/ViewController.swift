@@ -34,16 +34,26 @@ class ViewController: UIViewController {
         
         self.title = "Key Create & Delegate"
         
-        //디폴트는 https://testdelegator.metadium.com, https://api.metadium.com/dev, did:meta:testnet:
-        self.delegator = MetaDelegator.init()
         
-        //delegate url, node url, didPrefix를 직접 설정할 때
-        //self.delegator = MetaDelegator.init(delegatorUrl: "https://delegator.metadium.com", nodeUrl: "https://api.metadium.com/prod", didPrefix: "did:meta:testnet:")
+        /**
+         * 개발서버 delegateUrl: https://testdelegator.metadium.com, nodeUrl:  https://api.metadium.com/dev, resolverUrl: https://testnetresolver.metadium.com/1.0/identifiers/,  didPrefix: did:meta:testnet:
+         * 운영서버 delegateUrl: https://delegator.metadium.com, nodeUrl:  https://api.metadium.com/prod, resolverUrl: https://resolver.metadium.com/1.0/identifiers/, didPrefix: did:meta:
+         */
+
+        
+        self.delegator = MetaDelegator.init(delegatorUrl: "https://testdelegator.metadium.com",
+                                            nodeUrl: "https://api.metadium.com/dev",
+                                            resolverUrl: "https://testnetresolver.metadium.com/1.0/identifiers/",
+                                            didPrefix: "did:meta:testnet:",
+                                            api_key: "abcd1234efgzPiefqeq3l1ba344gg")
                 
         self.wallet = MetaWallet.init(delegator: self.delegator)
+        
         self.addServiceKeyButton.isEnabled = false
     }
 
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -77,6 +87,7 @@ class ViewController: UIViewController {
                     return
                 }
                 
+                //delay를 주지 않으면 트랜잭션 리셉 받아올 때 error가 떨어지기 때문에 어느정도의 delay가 필요합니다.
                 DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
                     
                     self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
@@ -95,10 +106,10 @@ class ViewController: UIViewController {
                         
                         
                         self.did = self.wallet.getDid()
-                        print(self.did)
+                        print(self.did!)
                         
                         let jsonStr = self.wallet.toJson()
-                        print(jsonStr)
+                        print(jsonStr!)
                         
                         let sign = String(data: signData!, encoding: .utf8)?.withHexPrefix
                         

@@ -34,23 +34,34 @@ end
 ## Use It
 
 ### 지갑 키 생성
+### 추가로 Metadium mainnet, testnet 을 사용시에는 apiKey 는 Metadium 운영부서에서 발급을 받아야 합니다.
 
-    self.delegator = MetaDelegator.init() 
+    //delegate url, node url, resolver url, didPrefix를 직접 설정할 때 초기화 부분에 셋팅합니다.
+    /**
+     * 개발서버 delegateUrl: https://testdelegator.metadium.com, nodeUrl:  https://api.metadium.com/dev, resolverUrl: https://testnetresolver.metadium.com/1.0/identifiers/,  didPrefix: did:meta:testnet:
+     * 운영서버 delegateUrl: https://delegator.metadium.com, nodeUrl:  https://api.metadium.com/prod, resolverUrl: https://resolver.metadium.com/1.0/identifiers/, didPrefix: did:meta:
+     */
+    
+    let delegator = MetaDelegator.init(delegatorUrl: "https://testdelegator.metadium.com",
+                                        nodeUrl: "https://api.metadium.com/dev",
+                                        resolverUrl: "https://testnetresolver.metadium.com/1.0/identifiers/",
+                                        didPrefix: "did:meta:testnet:",
+                                        api_key: "testKey")
 
-    //delegate url, node url, didPrefix를 직접 설정할 때 초기화 부분에 셋팅
-    //let delegator = MetaDelegator.init(delegatorUrl: "https://delegator.metadium.com", nodeUrl: "https://api.metadium.com/prod", didPrefix: "did:meta:testnet:", did: nil, privateKey: nil)
-    let wallet = MetaWallet.init(delegator: self.delegator)
-
-    //key.privateKey, key.publicKey, key.address
     let key = wallet.createKey()
-
+    
+    //key.privateKey, key.publicKey, key.address
 
 
 ### load KeyStore
 
-    let delegator = MetaDelegator.init(delegatorUrl: "https://delegator.metadium.com", nodeUrl: "https://api.metadium.com/prod", didPrefix: "did:meta:testnet:", did: "did:meta:testnet:0x00000000000000000000000000002991", privateKey: "0x4439fecf13a924cf2790733fe097f92de747638c6ba863f98b648b60b14ea204")
-
-    let wallet = MetaWallet.init(delegator: delegator)
+    let delegator = MetaDelegator.init(delegatorUrl: "https://testdelegator.metadium.com",
+                                        nodeUrl: "https://api.metadium.com/dev",
+                                        resolverUrl: "https://testnetresolver.metadium.com/1.0/identifiers/",
+                                        didPrefix: "did:meta:testnet:",
+                                        api_key: "testKey")
+    
+    let wallet = MetaWallet.init(delegator: delegator, privateKey: "0xb7fddf3e1645b2f2ef8e1f427ec2ae76cc6989fd33999f065bc48cb39d6c2336", did: "did:meta:testnet:0000000000000000000000000000000000000000000000000000000000002f4c")
 
 
 ### key sign
