@@ -25,7 +25,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 source 'https://github.com/METADIUM/Web3Swift-iOS'
 
 target 'project' do
-    pod 'KeepinCRUD'
+    pod 'KeepinCRUD', :git => 'https://github.com/METADIUM/Keepin_iOS_SDK.git'
 end
 ```
 
