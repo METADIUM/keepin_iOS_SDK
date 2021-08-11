@@ -34,7 +34,7 @@ end
 ## Use It
 
 ### 지갑 키 생성
-### 추가로 Metadium mainnet, testnet 을 사용시에는 apiKey 는 Metadium 운영부서에서 발급을 받아야 합니다.
+#### 추가로 Metadium mainnet, testnet 을 사용시에는 apiKey 는 Metadium 운영부서에서 발급을 받아야 합니다.
 
     //delegate url, node url, resolver url, didPrefix를 직접 설정할 때 초기화 부분에 셋팅합니다.
     /**
@@ -123,21 +123,23 @@ end
             return
             }
     
-        self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
-            if error != nil {
-                return
-            }
-        
-            if receipt == nil {
-                self.wallet.transactionReceipt(type: type!, txId: txId!, complection: nil)
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.3) {
+            self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
+                if error != nil {
+                    return
+                }
             
-                return
-            }
-        
-            print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
-        
-            if receipt!.status == .success {
-                //Todo...
+                if receipt == nil {
+                    self.wallet.transactionReceipt(type: type!, txId: txId!, complection: nil)
+                
+                    return
+                }
+            
+                print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
+            
+                if receipt!.status == .success {
+                    //Todo...
+                }
             }
         }
     }
@@ -152,25 +154,27 @@ end
         if error != nil {
             return
         }
-    
-        self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
-            if error != nil {
-                return
-            }
         
-            if receipt == nil {
-                self.wallet.transactionReceipt(type: type!, txId: txId!, complection: nil)
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.3) {
+            self.wallet.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
+                if error != nil {
+                    return
+                }
             
-                return
-            }
-        
-            print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
-        
-            if receipt!.status == .success {
-                //Todo...
-            }
-            else {
-                //Todo...
+                if receipt == nil {
+                    self.wallet.transactionReceipt(type: type!, txId: txId!, complection: nil)
+                
+                    return
+                }
+            
+                print("status: \(receipt!.status), hash : \(receipt!.transactionHash)")
+            
+                if receipt!.status == .success {
+                    //Todo...
+                }
+                else {
+                    //Todo...
+                }
             }
         }
     }
