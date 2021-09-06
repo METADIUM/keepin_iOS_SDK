@@ -140,7 +140,11 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
                                                    ownerDid: "did:meta:testnet:0000000000000000000000000000000000000000000000000000000000002f4c",
                                                    subjects: ["name": "Keepin"])!
         
+        print(vc)
+        
         let serializedVC = try? vc?!.serialize()
+        
+        print(serializedVC)
     }
     
     

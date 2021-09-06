@@ -601,6 +601,8 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
     }
     
     
+
+    
     /**
      * Sign verifiable credential, presntation
      */
@@ -609,14 +611,19 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
         if let verify = verifiable as? VerifiableCredential {
             verify.issuer = self.getDid()
             
-            return try verify.sign(kid: self.getKid(), nonce: nonce, signer: ECDSASigner.init(privateKey: self.account.privateKey.data(using: .utf8)!), baseClaims: claim)
+            let privateKey = self.getInt32Byte(int: BigUInt(hex:self.account.privateKey)!)
             
+            let jwsObj = try verify.sign(kid: self.getKid(), nonce: nonce, signer: ECDSASigner.init(privateKey: privateKey), baseClaims: claim)
+            
+            return jwsObj
         }
         
         if let verify = verifiable as? VerifiablePresentation {
             verify.holder = self.getDid()
             
-            return try verify.sign(kid: self.getKid(), nonce: nonce, signer: ECDSASigner.init(privateKey: self.account.privateKey.data(using: .utf8)!), baseClaims: claim)
+            let privateKey = self.getInt32Byte(int: BigUInt(hex:self.account.privateKey)!)
+            
+            return try verify.sign(kid: self.getKid(), nonce: nonce, signer: ECDSASigner.init(privateKey: privateKey), baseClaims: claim)
         }
         
         return nil
@@ -643,6 +650,11 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
         if expirationDate != nil {
             vc?.expirationDate = expirationDate
         }
+        
+        let credentialSubject = NSMutableDictionary.init(dictionary: subjects)
+        credentialSubject.setValue(ownerDid, forKey: "id")
+        
+        vc?.credentialSubject = credentialSubject
         
         return try self.sign(verifiable: vc!, nonce: nonce, claim: nil)
     }
@@ -734,7 +746,7 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
             
             self.did = self.delegator.didPrefix + self.metaID.noHexPrefix
             
-            print(self.metaID)
+            print(self.did)
             
             return self.did
         }
