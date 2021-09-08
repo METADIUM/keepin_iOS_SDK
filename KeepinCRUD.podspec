@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'KeepinCRUD'
-  s.version          = '0.3.0'
+  s.version          = '0.3.1'
   s.swift_version    = '4.2'
   s.summary          = 'Keepin Key CRUD'
 

@@ -512,6 +512,8 @@ public class MetaWallet: NSObject, MetaDelegatorMessenger {
             let ein = BigUInt(hex: (result.object(forKey: "ein") as? String)!)
             self.metaID = self.getInt32Byte(int: ein!).toHexString().withHexPrefix
             
+            self.delegator.addPublicKey()
+            
             return true
         }
         

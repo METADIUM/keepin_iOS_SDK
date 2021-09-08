@@ -185,11 +185,78 @@ public class MetaDelegator: NSObject {
             }
             
             if let txId = result as? String {
+                
                 return complection(.createDid, txId, nil)
             }
         }
     }
     
+    
+    
+    public func addPublicKey() {
+        
+        self.getAllServiceAddress()
+        
+        let account = try? EthereumAccount.init(keyStore: self.keyStore)
+        let publicKey = account!.publicKey
+        
+        let publicKeyResolverAddress = self.registryAddress!.publicKey
+
+        let temp = Data([0x19, 0x00])
+
+        let msg = KDefine.KAdd_PublicKey.data(using: .utf8)
+        let addrdata = Data.fromHex(account!.address)
+        let publicKeyData = Data.fromHex(publicKey)
+
+        let pubKeyData = Data.fromHex(publicKeyResolverAddress!)
+        
+        var timeStamp: Int!
+        
+        DispatchQueue.global().sync {
+            timeStamp = self.getTimeStamp()
+        }
+
+        let timeData = self.getInt32Byte(int: BigUInt(timeStamp))
+
+        let data = (temp + pubKeyData! + msg! + addrdata! + publicKeyData! + timeData).keccak256
+
+        let prefixData = (KDefine.kPrefix + String(data.count)).data(using: .ascii)
+        let signature = try? account!.sign(data: prefixData! + data)
+
+        let r = signature!.subdata(in: 0..<32).toHexString().withHexPrefix
+        let s = signature!.subdata(in: 32..<64).toHexString().withHexPrefix
+        let v = UInt8(signature![64]) + 27
+
+        let vStr = String(format: "0x%02x", v)
+        print(vStr)
+        
+        let signData = (r.noHexPrefix + s.noHexPrefix + vStr.noHexPrefix).data(using: .utf8)
+        
+        
+        self.addPublicKeyDelegated(signData: signData!, r: r, s: s, v: vStr) { type, txId, error in
+            
+            if error != nil {
+                return
+            }
+            
+            DispatchQueue.global().asyncAfter(deadline: .now() + 0.3) {
+                
+                self.transactionReceipt(type: type!, txId: txId!) { (error, receipt) in
+                    if error != nil {
+                        return
+                    }
+                    
+                    if receipt == nil {
+                        self.transactionReceipt(type: type!, txId: txId!, complection: nil)
+                        
+                        return
+                    }
+                    
+                    
+                }
+            }
+        }
+    }
     
     
     
@@ -356,6 +423,32 @@ public class MetaDelegator: NSObject {
                 return complection(.removeAssociatedAddress, txId, error)
             }
         }
+    }
+    
+    
+    public func transactionReceipt(type: MetaTransactionType, txId: String, complection: TransactionRecipt?) -> Void {
+
+        self.ethereumClient.eth_getTransactionReceipt(txHash: txId) { (error, receipt) in
+            if error != nil {
+                return complection!(error, nil)
+            }
+            
+            if receipt == nil {
+                return complection!(error, nil)
+            }
+        
+        
+            return complection!(nil, receipt)
+        }
+    }
+    
+    
+    private func getInt32Byte(int: BigUInt) -> Data {
+        let bytes = int.bytes // should be <= 32 bytes
+        let byte = [UInt8](repeating: 0x00, count: 32 - bytes.count) + bytes
+        let data = Data(bytes: byte)
+        
+        return data
     }
 
 }

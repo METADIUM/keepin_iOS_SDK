@@ -119,8 +119,6 @@ class ViewController: UIViewController {
                             
                             print(self.wallet.getKid())
                         }
-                        
-                        self.addPublicKeyDelegate()
                     }
                 }
             }
